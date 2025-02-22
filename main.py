@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 import pandas as pd
 
-# Mock AI Agents (replace with actual Gemini API integration)
+# Mock AI Agents (replace with actual API integration)
 class DietaryExpert:
     def generate_plan(self, profile):
         return {
@@ -103,15 +103,27 @@ st.markdown("""
 # Sidebar for API Key and Navigation
 with st.sidebar:
     st.title("⚙️ Settings")
-    gemini_api_key = st.text_input("Enter Gemini API Key", type="password", help="Required for AI functionality.")
-    if not gemini_api_key:
-        st.warning("Please enter your API key to proceed.")
-        st.markdown("[Get your API key here](https://aistudio.google.com/apikey)")
+    api_provider = st.selectbox(
+        "Choose API Provider",
+        options=["Gemini", "DeepSeek"],
+        help="Select the AI API provider for generating plans."
+    )
+    api_key = st.text_input(
+        f"Enter {api_provider} API Key",
+        type="password",
+        help=f"Required for {api_provider} functionality."
+    )
+    if not api_key:
+        st.warning(f"Please enter your {api_provider} API key to proceed.")
+        if api_provider == "Gemini":
+            st.markdown("[Get your Gemini API key here](https://aistudio.google.com/apikey)")
+        else:
+            st.markdown("[Get your DeepSeek API key here](https://platform.deepseek.com)")
     else:
         st.success("API Key accepted!")
 
     st.title("📊 Progress Tracker")
-    weight_today = st.number_input("Today's Weight (kg)", min_value=20.0, max_value=300.0, step=0.1)
+    weight_today = st.number_input("Today's Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=90.0)
     if st.button("Log Weight"):
         if weight_today <= 0:
             st.error("Weight must be a positive number.")
@@ -139,24 +151,31 @@ st.markdown("""
 st.header("👤 Your Profile")
 col1, col2 = st.columns(2)
 with col1:
-    age = st.number_input("Age", min_value=10, max_value=100, step=1)
-    height = st.number_input("Height (cm)", min_value=100.0, max_value=250.0, step=0.1)
+    age = st.number_input("Age", min_value=10, max_value=100, step=1, value=45)
+    height = st.number_input("Height (cm)", min_value=100.0, max_value=250.0, step=0.1, value=167.64)
     activity_level = st.selectbox(
         "Activity Level",
-        options=["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"]
+        options=["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"],
+        index=2  # Default: Moderately Active
+    )
+    dietary_preferences = st.selectbox(
+        "Dietary Preferences",
+        options=["Vegetarian", "Keto", "Gluten Free", "Low Carb", "Dairy Free"],
+        index=1  # Default: Keto
     )
 with col2:
-    weight = st.number_input("Weight (kg)", min_value=20.0, max_value=300.0, step=0.1)
-    sex = st.selectbox("Sex", options=["Male", "Female", "Other"])
+    weight = st.number_input("Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=90.0)
+    sex = st.selectbox("Sex", options=["Male", "Female", "Other"], index=0)  # Default: Male
     fitness_goals = st.selectbox(
         "Fitness Goals",
-        options=["Lose Weight", "Gain Muscle", "Endurance", "Stay Fit", "Strength Training"]
+        options=["Lose Weight", "Gain Muscle", "Endurance", "Stay Fit", "Strength Training"],
+        index=1  # Default: Gain Muscle
     )
 
 # Generate Plans
 if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
-    if not gemini_api_key:
-        st.error("Please enter your Gemini API key in the sidebar.")
+    if not api_key:
+        st.error(f"Please enter your {api_provider} API key in the sidebar.")
     else:
         with st.spinner("Creating your perfect health and fitness routine..."):
             try:
@@ -169,6 +188,7 @@ if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
                 Height: {height}cm
                 Sex: {sex}
                 Activity Level: {activity_level}
+                Dietary Preferences: {dietary_preferences}
                 Fitness Goals: {fitness_goals}
                 """
 
@@ -211,8 +231,8 @@ if st.session_state.plans_generated:
         if question_input:
             with st.spinner("Finding the best answer for you..."):
                 try:
-                    # Mock AI response (replace with Gemini API call)
-                    answer = "This is a sample answer. Replace with actual AI response."
+                    # Mock AI response (replace with API call)
+                    answer = "This is a sample answer. Replace with actual API response."
                     st.session_state.qa_pairs.append((question_input, answer))
                     st.success("Answer generated!")
                 except Exception as e:
