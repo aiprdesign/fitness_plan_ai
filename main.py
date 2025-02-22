@@ -60,13 +60,23 @@ def validate_api_key(api_key, api_provider):
 # Function to get age icon based on age
 def get_age_icon(age):
     if age < 18:
-        return "👶"  # Child
+        return "👦"  # Child
     elif 18 <= age < 40:
-        return "🧑"  # Young adult
+        return "👨"  # Young adult
     elif 40 <= age < 60:
-        return "🧓"  # Middle-aged adult
+        return "🧔"  # Middle-aged adult
     else:
-        return "👵"  # Elderly person
+        return "👴"  # Elderly person
+
+# Function to calculate BMI
+def calculate_bmi(weight, height):
+    return weight / ((height / 100) ** 2)
+
+# Function to calculate healthy weight range
+def calculate_healthy_weight(height):
+    lower_range = 18.5 * ((height / 100) ** 2)
+    upper_range = 24.9 * ((height / 100) ** 2)
+    return lower_range, upper_range
 
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
@@ -107,10 +117,14 @@ st.markdown("""
         padding: 10px;
     }
     .stSlider>div>div>div>div {
-        height: 30px;
+        height: 40px;
     }
     .stSlider>div>div>div>div>div {
-        height: 30px;
+        height: 40px;
+    }
+    .stSlider label {
+        font-size: 1.2rem !important;
+        font-weight: bold !important;
     }
     .success-box {
         padding: 1rem;
@@ -138,6 +152,7 @@ st.markdown("""
         font-size: 3rem;
         text-align: center;
         margin-bottom: 1rem;
+        color: #2c3e50;
     }
     .modern-container {
         background-color: #f9f9f9;
@@ -150,6 +165,13 @@ st.markdown("""
         font-size: 1.5rem;
         font-weight: bold;
         color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+    .large-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        text-align: center;
         margin-bottom: 1rem;
     }
     </style>
@@ -214,10 +236,12 @@ with st.container():
     st.markdown("<div class='modern-header'>🎂 Age</div>", unsafe_allow_html=True)
     age = st.slider("", min_value=10, max_value=100, value=45, step=1, help="Adjust your age using the slider.")
     age_icon = get_age_icon(age)
+    st.markdown(f"<div class='large-number'>{age} years</div>", unsafe_allow_html=True)
     st.markdown(f"<div class='age-icon'>{age_icon}</div>", unsafe_allow_html=True)
 
     st.markdown("<div class='modern-header'>⚖️ Weight (kg)</div>", unsafe_allow_html=True)
     weight = st.slider("", min_value=20.0, max_value=300.0, value=90.0, step=0.1, help="Adjust your weight using the slider.")
+    st.markdown(f"<div class='large-number'>{weight} kg</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Gender Radio Button
@@ -235,6 +259,14 @@ with st.container():
     st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
     st.markdown("<div class='modern-header'>📏 Height (cm)</div>", unsafe_allow_html=True)
     height = st.number_input("", min_value=100.0, max_value=250.0, step=0.1, value=default_height, help="Your height in centimeters.")
+
+    # Calculate BMI and Healthy Weight Range
+    bmi = calculate_bmi(weight, height)
+    healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height)
+
+    st.markdown("<div class='modern-header'>📊 BMI</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='large-number'>{bmi:.1f}</div>", unsafe_allow_html=True)
+    st.markdown(f"**Healthy Weight Range for Your Height:** {healthy_weight_lower:.1f} kg - {healthy_weight_upper:.1f} kg")
 
     st.markdown("<div class='modern-header'>🏃‍♂️ Activity Level</div>", unsafe_allow_html=True)
     activity_level = st.selectbox(
