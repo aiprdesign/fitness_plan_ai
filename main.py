@@ -5,9 +5,15 @@ import pandas as pd
 # Mock AI Agents (replace with actual API integration)
 class DietaryExpert:
     def generate_plan(self, profile):
+        age = profile.get("age", 45)
+        weight = profile.get("weight", 90)
+        height = profile.get("height", 167.64)
+        dietary_preferences = profile.get("dietary_preferences", "Keto")
+        fitness_goals = profile.get("fitness_goals", "Gain Muscle")
+
         return {
-            "why_this_plan_works": "High Protein, Healthy Fats, Moderate Carbohydrates, and Caloric Balance",
-            "meal_plan": """
+            "why_this_plan_works": f"Tailored for a {age}-year-old {profile.get('sex', 'Male')} weighing {weight}kg and {height}cm tall.",
+            "meal_plan": f"""
             **Breakfast**: Scrambled eggs with spinach and avocado.
             **Lunch**: Grilled chicken salad with quinoa and olive oil dressing.
             **Dinner**: Baked salmon with steamed broccoli and sweet potatoes.
@@ -23,9 +29,14 @@ class DietaryExpert:
 
 class FitnessExpert:
     def generate_plan(self, profile):
+        age = profile.get("age", 45)
+        weight = profile.get("weight", 90)
+        height = profile.get("height", 167.64)
+        fitness_goals = profile.get("fitness_goals", "Gain Muscle")
+
         return {
-            "goals": "Build strength, improve endurance, and maintain overall fitness",
-            "routine": """
+            "goals": f"Build strength, improve endurance, and maintain overall fitness for a {age}-year-old.",
+            "routine": f"""
             **Warm-up**: 10 minutes of dynamic stretching.
             **Workout**:
             - Squats: 3 sets of 12 reps.
@@ -40,6 +51,11 @@ class FitnessExpert:
             - Stay consistent with your routine.
             """
         }
+
+# Function to validate API key (placeholder)
+def validate_api_key(api_key, api_provider):
+    # Replace with actual API validation logic
+    return True  # Placeholder
 
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
@@ -120,7 +136,10 @@ with st.sidebar:
         else:
             st.markdown("[Get your DeepSeek API key here](https://platform.deepseek.com)")
     else:
-        st.success("API Key accepted!")
+        if validate_api_key(api_key, api_provider):
+            st.success("API Key accepted!")
+        else:
+            st.error("Invalid API key. Please check and try again.")
 
     st.title("📊 Progress Tracker")
     weight_today = st.number_input("Today's Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=90.0)
@@ -149,10 +168,18 @@ st.markdown("""
 
 # User Profile Input
 st.header("👤 Your Profile")
+
+# Age Slider
+age = st.slider("Age", min_value=10, max_value=100, value=45, step=1)
+
+# Dynamic Weight and Height Calculation
+default_weight = 70 + (age - 20) * 0.5  # Example formula
+default_height = 170 - (age - 20) * 0.2  # Example formula
+
 col1, col2 = st.columns(2)
 with col1:
-    age = st.number_input("Age", min_value=10, max_value=100, step=1, value=45)
-    height = st.number_input("Height (cm)", min_value=100.0, max_value=250.0, step=0.1, value=167.64)
+    weight = st.number_input("Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=default_weight)
+    height = st.number_input("Height (cm)", min_value=100.0, max_value=250.0, step=0.1, value=default_height)
     activity_level = st.selectbox(
         "Activity Level",
         options=["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"],
@@ -164,7 +191,6 @@ with col1:
         index=1  # Default: Keto
     )
 with col2:
-    weight = st.number_input("Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=90.0)
     sex = st.selectbox("Sex", options=["Male", "Female", "Other"], index=0)  # Default: Male
     fitness_goals = st.selectbox(
         "Fitness Goals",
@@ -182,15 +208,15 @@ if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
                 dietary_expert = DietaryExpert()
                 fitness_expert = FitnessExpert()
 
-                user_profile = f"""
-                Age: {age}
-                Weight: {weight}kg
-                Height: {height}cm
-                Sex: {sex}
-                Activity Level: {activity_level}
-                Dietary Preferences: {dietary_preferences}
-                Fitness Goals: {fitness_goals}
-                """
+                user_profile = {
+                    "age": age,
+                    "weight": weight,
+                    "height": height,
+                    "sex": sex,
+                    "activity_level": activity_level,
+                    "dietary_preferences": dietary_preferences,
+                    "fitness_goals": fitness_goals
+                }
 
                 st.session_state.dietary_plan = dietary_expert.generate_plan(user_profile)
                 st.session_state.fitness_plan = fitness_expert.generate_plan(user_profile)
