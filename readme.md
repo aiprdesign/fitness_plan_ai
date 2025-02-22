@@ -36,13 +36,8 @@ Welcome to the **AI Health & Fitness Planner**! This app provides personalized d
    git clone https://github.com/your-username/ai-health-fitness-planner.git
    cd ai-health-fitness-planner
 Install dependencies:
-
-bash
-Copy
 pip install -r requirements.txt
-Run the app:
 
-bash
-Copy
+Run the app: 
 streamlit run app.py
 Open your browser and navigate to http://localhost:8501.
