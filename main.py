@@ -174,6 +174,13 @@ st.markdown("""
         text-align: center;
         margin-bottom: 0.5rem;
     }
+    .bmi-box {
+        background-color: #00008B;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -230,8 +237,8 @@ st.markdown("""
 # User Profile Input
 st.header("👤 Your Profile")
 
-# Age and Weight Sliders
-col1, col2 = st.columns(2)
+# Age, Weight, and Height Sliders
+col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
     st.markdown("<div class='modern-header'>🎂 Age</div>", unsafe_allow_html=True)
@@ -248,24 +255,31 @@ with col2:
     st.markdown(f"<div class='large-number'>{weight} kg</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+with col3:
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>📏 Height (cm)</div>", unsafe_allow_html=True)
+    height = st.slider("", min_value=100.0, max_value=250.0, value=170.0, step=0.1, help="Adjust your height using the slider.")
+    st.markdown(f"<div class='large-number'>{height} cm</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# BMI and Healthy Weight Range
+bmi = calculate_bmi(weight, height)
+healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height)
+
+st.markdown("<div class='bmi-box'>", unsafe_allow_html=True)
+st.markdown(f"<div class='modern-header'>📊 BMI: {bmi:.1f}</div>", unsafe_allow_html=True)
+st.markdown(f"**Healthy Weight Range for Your Height:** {healthy_weight_lower:.1f} kg - {healthy_weight_upper:.1f} kg")
+st.markdown("</div>", unsafe_allow_html=True)
+
 # Gender Radio Button
 st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
 st.markdown("<div class='modern-header'>👫 Gender</div>", unsafe_allow_html=True)
 sex = st.radio("", options=["Male", "Female", "Other"], index=0, help="Select your gender.")
 st.markdown("</div>", unsafe_allow_html=True)
 
-# Dynamic Height Calculation
-default_height = 170 - (age - 20) * 0.2  # Example formula
-
 # Additional Inputs
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
-    st.markdown("<div class='modern-header'>📏 Height (cm)</div>", unsafe_allow_html=True)
-    height = st.number_input("", min_value=100.0, max_value=250.0, step=0.1, value=default_height, help="Your height in centimeters.")
-    st.markdown("</div>", unsafe_allow_html=True)
-
-with col2:
     st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
     st.markdown("<div class='modern-header'>🏃‍♂️ Activity Level</div>", unsafe_allow_html=True)
     activity_level = st.selectbox(
@@ -276,8 +290,7 @@ with col2:
     )
     st.markdown("</div>", unsafe_allow_html=True)
 
-col1, col2 = st.columns(2)
-with col1:
+with col2:
     st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
     st.markdown("<div class='modern-header'>🥗 Dietary Preferences</div>", unsafe_allow_html=True)
     dietary_preferences = st.selectbox(
@@ -288,7 +301,8 @@ with col1:
     )
     st.markdown("</div>", unsafe_allow_html=True)
 
-with col2:
+col1, col2 = st.columns(2)
+with col1:
     st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
     st.markdown("<div class='modern-header'>🎯 Fitness Goals</div>", unsafe_allow_html=True)
     fitness_goals = st.selectbox(
@@ -298,16 +312,6 @@ with col2:
         help="What do you want to achieve?"
     )
     st.markdown("</div>", unsafe_allow_html=True)
-
-# BMI and Healthy Weight Range
-bmi = calculate_bmi(weight, height)
-healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height)
-
-st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
-st.markdown("<div class='modern-header'>📊 BMI & Healthy Weight</div>", unsafe_allow_html=True)
-st.markdown(f"<div class='large-number'>BMI: {bmi:.1f}</div>", unsafe_allow_html=True)
-st.markdown(f"**Healthy Weight Range for Your Height:** {healthy_weight_lower:.1f} kg - {healthy_weight_upper:.1f} kg")
-st.markdown("</div>", unsafe_allow_html=True)
 
 # Generate Plans
 if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
