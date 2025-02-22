@@ -57,6 +57,17 @@ def validate_api_key(api_key, api_provider):
     # Replace with actual API validation logic
     return True  # Placeholder
 
+# Function to get age icon based on age
+def get_age_icon(age):
+    if age < 18:
+        return "👶"  # Child
+    elif 18 <= age < 40:
+        return "🧑"  # Young adult
+    elif 40 <= age < 60:
+        return "🧓"  # Middle-aged adult
+    else:
+        return "👵"  # Elderly person
+
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
     st.session_state.dietary_plan = {}
@@ -69,7 +80,7 @@ if 'qa_pairs' not in st.session_state:
 if 'plans_generated' not in st.session_state:
     st.session_state.plans_generated = False
 
-# Custom CSS for better UI
+# Custom CSS for modern UI
 st.markdown("""
     <style>
     .main {
@@ -120,8 +131,26 @@ st.markdown("""
         border: 1px solid #87CEEB;
     }
     .icon {
-        font-size: 1.5rem;
+        font-size: 2rem;
         margin-right: 0.5rem;
+    }
+    .age-icon {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .modern-container {
+        background-color: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    .modern-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 1rem;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -179,44 +208,58 @@ st.markdown("""
 # User Profile Input
 st.header("👤 Your Profile")
 
-# Age Slider
-st.markdown("### 🎂 Age")
-age = st.slider("", min_value=10, max_value=100, value=45, step=1, help="Adjust your age using the slider.")
+# Age and Weight Sliders
+with st.container():
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>🎂 Age</div>", unsafe_allow_html=True)
+    age = st.slider("", min_value=10, max_value=100, value=45, step=1, help="Adjust your age using the slider.")
+    age_icon = get_age_icon(age)
+    st.markdown(f"<div class='age-icon'>{age_icon}</div>", unsafe_allow_html=True)
 
-# Dynamic Weight and Height Calculation
-default_weight = 70 + (age - 20) * 0.5  # Example formula
+    st.markdown("<div class='modern-header'>⚖️ Weight (kg)</div>", unsafe_allow_html=True)
+    weight = st.slider("", min_value=20.0, max_value=300.0, value=90.0, step=0.1, help="Adjust your weight using the slider.")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# Gender Radio Button
+with st.container():
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>👫 Gender</div>", unsafe_allow_html=True)
+    sex = st.radio("", options=["Male", "Female", "Other"], index=0, help="Select your gender.")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# Dynamic Height Calculation
 default_height = 170 - (age - 20) * 0.2  # Example formula
 
-col1, col2 = st.columns(2)
-with col1:
-    st.markdown("### ⚖️ Weight (kg)")
-    weight = st.number_input("", min_value=20.0, max_value=300.0, step=0.1, value=default_weight, help="Your weight in kilograms.")
-    st.markdown("### 📏 Height (cm)")
+# Additional Inputs
+with st.container():
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>📏 Height (cm)</div>", unsafe_allow_html=True)
     height = st.number_input("", min_value=100.0, max_value=250.0, step=0.1, value=default_height, help="Your height in centimeters.")
-    st.markdown("### 🏃‍♂️ Activity Level")
+
+    st.markdown("<div class='modern-header'>🏃‍♂️ Activity Level</div>", unsafe_allow_html=True)
     activity_level = st.selectbox(
         "",
         options=["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"],
         index=2,  # Default: Moderately Active
         help="Select your typical activity level."
     )
-    st.markdown("### 🥗 Dietary Preferences")
+
+    st.markdown("<div class='modern-header'>🥗 Dietary Preferences</div>", unsafe_allow_html=True)
     dietary_preferences = st.selectbox(
         "",
         options=["Vegetarian", "Keto", "Gluten Free", "Low Carb", "Dairy Free"],
         index=1,  # Default: Keto
         help="Select your dietary preference."
     )
-with col2:
-    st.markdown("### 👫 Sex")
-    sex = st.selectbox("", options=["Male", "Female", "Other"], index=0, help="Select your sex.")  # Default: Male
-    st.markdown("### 🎯 Fitness Goals")
+
+    st.markdown("<div class='modern-header'>🎯 Fitness Goals</div>", unsafe_allow_html=True)
     fitness_goals = st.selectbox(
         "",
         options=["Lose Weight", "Gain Muscle", "Endurance", "Stay Fit", "Strength Training"],
         index=1,  # Default: Gain Muscle
         help="What do you want to achieve?"
     )
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # Generate Plans
 if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
