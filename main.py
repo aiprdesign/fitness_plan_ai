@@ -78,6 +78,14 @@ def calculate_healthy_weight(height):
     upper_range = 24.9 * ((height / 100) ** 2)
     return lower_range, upper_range
 
+# Function to calculate ideal weight based on height and age
+def calculate_ideal_weight(height, age):
+    # Simple formula for ideal weight (can be adjusted)
+    ideal_weight = 50 + 0.9 * (height - 152)  # Adjusted for age
+    if age > 40:
+        ideal_weight *= 0.95  # Slightly lower ideal weight for older adults
+    return ideal_weight
+
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
     st.session_state.dietary_plan = {}
@@ -265,10 +273,19 @@ with col3:
 # BMI and Healthy Weight Range
 bmi = calculate_bmi(weight, height)
 healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height)
+ideal_weight = calculate_ideal_weight(height, age)
+weight_difference = weight - ideal_weight
 
 st.markdown("<div class='bmi-box'>", unsafe_allow_html=True)
 st.markdown(f"<div class='modern-header'>📊 BMI: {bmi:.1f}</div>", unsafe_allow_html=True)
 st.markdown(f"**Healthy Weight Range for Your Height:** {healthy_weight_lower:.1f} kg - {healthy_weight_upper:.1f} kg")
+st.markdown(f"**Ideal Weight for Your Height and Age:** {ideal_weight:.1f} kg")
+if weight_difference > 0:
+    st.markdown(f"**You are {weight_difference:.1f} kg overweight.**")
+elif weight_difference < 0:
+    st.markdown(f"**You are {-weight_difference:.1f} kg underweight.**")
+else:
+    st.markdown("**You are at your ideal weight.**")
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Gender Radio Button
