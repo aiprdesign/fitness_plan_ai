@@ -95,6 +95,12 @@ st.markdown("""
         border-radius: 10px;
         padding: 10px;
     }
+    .stSlider>div>div>div>div {
+        height: 30px;
+    }
+    .stSlider>div>div>div>div>div {
+        height: 30px;
+    }
     .success-box {
         padding: 1rem;
         border-radius: 0.5rem;
@@ -112,6 +118,10 @@ st.markdown("""
         border-radius: 0.5rem;
         background-color: #f0f8ff;
         border: 1px solid #87CEEB;
+    }
+    .icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -170,7 +180,8 @@ st.markdown("""
 st.header("👤 Your Profile")
 
 # Age Slider
-age = st.slider("Age", min_value=10, max_value=100, value=45, step=1)
+st.markdown("### 🎂 Age")
+age = st.slider("", min_value=10, max_value=100, value=45, step=1, help="Adjust your age using the slider.")
 
 # Dynamic Weight and Height Calculation
 default_weight = 70 + (age - 20) * 0.5  # Example formula
@@ -178,24 +189,33 @@ default_height = 170 - (age - 20) * 0.2  # Example formula
 
 col1, col2 = st.columns(2)
 with col1:
-    weight = st.number_input("Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=default_weight)
-    height = st.number_input("Height (cm)", min_value=100.0, max_value=250.0, step=0.1, value=default_height)
+    st.markdown("### ⚖️ Weight (kg)")
+    weight = st.number_input("", min_value=20.0, max_value=300.0, step=0.1, value=default_weight, help="Your weight in kilograms.")
+    st.markdown("### 📏 Height (cm)")
+    height = st.number_input("", min_value=100.0, max_value=250.0, step=0.1, value=default_height, help="Your height in centimeters.")
+    st.markdown("### 🏃‍♂️ Activity Level")
     activity_level = st.selectbox(
-        "Activity Level",
+        "",
         options=["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"],
-        index=2  # Default: Moderately Active
+        index=2,  # Default: Moderately Active
+        help="Select your typical activity level."
     )
+    st.markdown("### 🥗 Dietary Preferences")
     dietary_preferences = st.selectbox(
-        "Dietary Preferences",
+        "",
         options=["Vegetarian", "Keto", "Gluten Free", "Low Carb", "Dairy Free"],
-        index=1  # Default: Keto
+        index=1,  # Default: Keto
+        help="Select your dietary preference."
     )
 with col2:
-    sex = st.selectbox("Sex", options=["Male", "Female", "Other"], index=0)  # Default: Male
+    st.markdown("### 👫 Sex")
+    sex = st.selectbox("", options=["Male", "Female", "Other"], index=0, help="Select your sex.")  # Default: Male
+    st.markdown("### 🎯 Fitness Goals")
     fitness_goals = st.selectbox(
-        "Fitness Goals",
+        "",
         options=["Lose Weight", "Gain Muscle", "Endurance", "Stay Fit", "Strength Training"],
-        index=1  # Default: Gain Muscle
+        index=1,  # Default: Gain Muscle
+        help="What do you want to achieve?"
     )
 
 # Generate Plans
