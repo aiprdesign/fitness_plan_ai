@@ -245,24 +245,6 @@ st.markdown("""
 # User Profile Input
 st.header("👤 Your Profile")
 
-# BMI and Healthy Weight at the Top
-bmi = calculate_bmi(weight, height)
-healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height)
-ideal_weight = calculate_ideal_weight(height, age)
-weight_difference = weight - ideal_weight
-
-st.markdown("<div class='bmi-box'>", unsafe_allow_html=True)
-st.markdown(f"<div class='modern-header'>📊 BMI: {bmi:.1f}</div>", unsafe_allow_html=True)
-st.markdown(f"**Healthy Weight Range for Your Height:** {healthy_weight_lower:.1f} kg - {healthy_weight_upper:.1f} kg")
-st.markdown(f"**Ideal Weight for Your Height and Age:** {ideal_weight:.1f} kg")
-if weight_difference > 0:
-    st.markdown(f"**You are {weight_difference:.1f} kg overweight.**")
-elif weight_difference < 0:
-    st.markdown(f"**You are {-weight_difference:.1f} kg underweight.**")
-else:
-    st.markdown("**You are at your ideal weight.**")
-st.markdown("</div>", unsafe_allow_html=True)
-
 # Age, Weight, and Height Sliders
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -287,6 +269,24 @@ with col3:
     height = st.slider("", min_value=100.0, max_value=250.0, value=170.0, step=0.1, help="Adjust your height using the slider.")
     st.markdown(f"<div class='large-number'>{height} cm</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
+# BMI and Healthy Weight at the Top
+bmi = calculate_bmi(weight, height)
+healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height)
+ideal_weight = calculate_ideal_weight(height, age)
+weight_difference = weight - ideal_weight
+
+st.markdown("<div class='bmi-box'>", unsafe_allow_html=True)
+st.markdown(f"<div class='modern-header'>📊 BMI: {bmi:.1f}</div>", unsafe_allow_html=True)
+st.markdown(f"**Healthy Weight Range for Your Height:** {healthy_weight_lower:.1f} kg - {healthy_weight_upper:.1f} kg")
+st.markdown(f"**Ideal Weight for Your Height and Age:** {ideal_weight:.1f} kg")
+if weight_difference > 0:
+    st.markdown(f"**You are {weight_difference:.1f} kg overweight.**")
+elif weight_difference < 0:
+    st.markdown(f"**You are {-weight_difference:.1f} kg underweight.**")
+else:
+    st.markdown("**You are at your ideal weight.**")
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Gender Radio Button
 st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
