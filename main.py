@@ -86,6 +86,17 @@ def calculate_ideal_weight(height, age):
         ideal_weight *= 0.95  # Slightly lower ideal weight for older adults
     return ideal_weight
 
+# Function to convert height from cm to feet and inches
+def cm_to_feet_inches(height_cm):
+    inches = height_cm / 2.54
+    feet = int(inches // 12)
+    inches = int(inches % 12)
+    return feet, inches
+
+# Function to convert height from feet and inches to cm
+def feet_inches_to_cm(feet, inches):
+    return (feet * 12 + inches) * 2.54
+
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
     st.session_state.dietary_plan = {}
@@ -265,15 +276,16 @@ with col2:
 
 with col3:
     st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
-    st.markdown("<div class='modern-header'>📏 Height (cm)</div>", unsafe_allow_html=True)
-    height = st.slider("", min_value=100.0, max_value=250.0, value=170.0, step=0.1, help="Adjust your height using the slider.")
-    st.markdown(f"<div class='large-number'>{height} cm</div>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>📏 Height</div>", unsafe_allow_html=True)
+    height_cm = st.slider("", min_value=100.0, max_value=250.0, value=170.0, step=0.1, help="Adjust your height using the slider.")
+    feet, inches = cm_to_feet_inches(height_cm)
+    st.markdown(f"<div class='large-number'>{height_cm:.1f} cm ({feet}'{inches}\")</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 # BMI and Healthy Weight at the Top
-bmi = calculate_bmi(weight, height)
-healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height)
-ideal_weight = calculate_ideal_weight(height, age)
+bmi = calculate_bmi(weight, height_cm)
+healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
+ideal_weight = calculate_ideal_weight(height_cm, age)
 weight_difference = weight - ideal_weight
 
 st.markdown("<div class='bmi-box'>", unsafe_allow_html=True)
@@ -343,7 +355,7 @@ if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
                 user_profile = {
                     "age": age,
                     "weight": weight,
-                    "height": height,
+                    "height": height_cm,
                     "sex": sex,
                     "activity_level": activity_level,
                     "dietary_preferences": dietary_preferences,
