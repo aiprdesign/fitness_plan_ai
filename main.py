@@ -432,14 +432,68 @@ with col3:
     st.markdown(f"<div class='large-number'>{height_cm:.1f} cm ({feet}'{inches}\")</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# BMI and Healthy Weight at the Top
-bmi = calculate_bmi(weight, height_cm)
-healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
-ideal_weight = calculate_ideal_weight(height_cm, age)
-weight_difference = weight - ideal_weight
+# Health Metrics Section
+st.markdown("---")
+st.markdown("### 📊 Health Metrics")
 
-# Custom BMI Meter
-create_bmi_meter(bmi)
+# Calculate ideal weight range and overweight status
+ideal_weight = calculate_ideal_weight(height_cm, age)
+healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
+overweight_status = weight - ideal_weight
+
+# Display Ideal Weight Range
+st.markdown(f"""
+    <div class='info-box'>
+        <strong>🎯 Ideal Weight Range:</strong> {healthy_weight_lower:.1f} kg - {healthy_weight_upper:.1f} kg
+    </div>
+""", unsafe_allow_html=True)
+
+# Display Overweight Status
+if overweight_status > 0:
+    st.markdown(f"""
+        <div class='warning-box'>
+            <strong>⚠️ You are {overweight_status:.1f} kg over your ideal weight.</strong>
+        </div>
+    """, unsafe_allow_html=True)
+elif overweight_status < 0:
+    st.markdown(f"""
+        <div class='success-box'>
+            <strong>✅ You are {abs(overweight_status):.1f} kg under your ideal weight.</strong>
+        </div>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown(f"""
+        <div class='success-box'>
+            <strong>🎉 You are at your ideal weight!</strong>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Display BMI Status with Emojis
+st.markdown("### 📈 BMI Status")
+if bmi < 18.5:
+    st.markdown(f"""
+        <div class='warning-box'>
+            <strong>😟 Underweight:</strong> Your BMI is {bmi:.1f}. Consider gaining weight for better health.
+        </div>
+    """, unsafe_allow_html=True)
+elif 18.5 <= bmi < 25:
+    st.markdown(f"""
+        <div class='success-box'>
+            <strong>😊 Healthy Weight:</strong> Your BMI is {bmi:.1f}. Keep up the good work!
+        </div>
+    """, unsafe_allow_html=True)
+elif 25 <= bmi < 30:
+    st.markdown(f"""
+        <div class='warning-box'>
+            <strong>😕 Overweight:</strong> Your BMI is {bmi:.1f}. Consider losing weight for better health.
+        </div>
+    """, unsafe_allow_html=True)
+else:
+    st.markdown(f"""
+        <div class='error-box'>
+            <strong>😨 Obese:</strong> Your BMI is {bmi:.1f}. It's important to take steps to improve your health.
+        </div>
+    """, unsafe_allow_html=True)
 
 # Gender Radio Button
 st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
