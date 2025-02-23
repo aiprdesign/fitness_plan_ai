@@ -10,193 +10,6 @@ def cm_to_feet_inches(height_cm):
     inches = int(inches % 12)
     return feet, inches
 
-# Mock AI Agents (replace with actual API integration)
-class DietaryExpert:
-    def generate_plan(self, profile):
-        age = profile.get("age", 45)
-        weight = profile.get("weight", 90)
-        height = profile.get("height", 167.64)
-        dietary_preferences = profile.get("dietary_preferences", "Vegetarian")
-        fitness_goals = profile.get("fitness_goals", "Gain Muscle")
-
-        # Dietary plans based on preferences
-        if dietary_preferences == "Vegetarian":
-            meal_plan = """
-            **Breakfast**: Greek yogurt with honey, nuts, and fresh berries.
-            **Lunch**: Quinoa salad with chickpeas, avocado, and feta cheese.
-            **Dinner**: Vegetable stir-fry with tofu and brown rice.
-            **Snacks**: Hummus with carrot sticks and a handful of almonds.
-            """
-        elif dietary_preferences == "Vegan":
-            meal_plan = """
-            **Breakfast**: Smoothie bowl with almond milk, bananas, and chia seeds.
-            **Lunch**: Lentil curry with basmati rice and steamed broccoli.
-            **Dinner**: Vegan Buddha bowl with quinoa, roasted veggies, and tahini dressing.
-            **Snacks**: Apple slices with peanut butter and a handful of walnuts.
-            """
-        elif dietary_preferences == "Meat Free":
-            meal_plan = """
-            **Breakfast**: Scrambled eggs with spinach and whole-grain toast.
-            **Lunch**: Caprese salad with mozzarella, tomatoes, and basil.
-            **Dinner**: Eggplant parmesan with a side of garlic bread.
-            **Snacks**: Cottage cheese with pineapple and a handful of cashews.
-            """
-        else:
-            meal_plan = """
-            **Breakfast**: Scrambled eggs with spinach and avocado.
-            **Lunch**: Grilled chicken salad with quinoa and olive oil dressing.
-            **Dinner**: Baked salmon with steamed broccoli and sweet potatoes.
-            **Snacks**: Greek yogurt with berries and a handful of almonds.
-            """
-
-        return {
-            "why_this_plan_works": f"Tailored for a {age}-year-old {profile.get('sex', 'Male')} weighing {weight}kg and {height}cm tall.",
-            "meal_plan": meal_plan,
-            "important_considerations": """
-            - Hydration: Drink plenty of water throughout the day.
-            - Electrolytes: Monitor sodium, potassium, and magnesium levels.
-            - Fiber: Ensure adequate intake through vegetables and fruits.
-            - Listen to your body: Adjust portion sizes as needed.
-            """
-        }
-
-class FitnessExpert:
-    def generate_plan(self, profile):
-        age = profile.get("age", 45)
-        weight = profile.get("weight", 90)
-        height = profile.get("height", 167.64)
-        fitness_goals = profile.get("fitness_goals", "Gain Muscle")
-
-        return {
-            "goals": f"Build strength, improve endurance, and maintain overall fitness for a {age}-year-old.",
-            "routine": f"""
-            **Warm-up**: 10 minutes of dynamic stretching.
-            **Workout**:
-            - Squats: 3 sets of 12 reps.
-            - Push-ups: 3 sets of 15 reps.
-            - Plank: 3 sets of 1 minute.
-            **Cool-down**: 5 minutes of static stretching.
-            """,
-            "tips": """
-            - Track your progress regularly.
-            - Allow proper rest between workouts.
-            - Focus on proper form.
-            - Stay consistent with your routine.
-            """
-        }
-
-# Function to generate a basic plan without AI
-def generate_basic_plan(profile):
-    age = profile.get("age", 45)
-    weight = profile.get("weight", 90)
-    height = profile.get("height", 167.64)
-    sex = profile.get("sex", "Male")
-    activity_level = profile.get("activity_level", "Moderately Active")
-    dietary_preferences = profile.get("dietary_preferences", "Vegetarian")
-    fitness_goals = profile.get("fitness_goals", "Gain Muscle")
-
-    # Basic meal plan based on dietary preferences
-    if dietary_preferences == "Vegetarian":
-        meal_plan = """
-        **Breakfast**: Greek yogurt with honey, nuts, and fresh berries.
-        **Lunch**: Quinoa salad with chickpeas, avocado, and feta cheese.
-        **Dinner**: Vegetable stir-fry with tofu and brown rice.
-        **Snacks**: Hummus with carrot sticks and a handful of almonds.
-        """
-    elif dietary_preferences == "Vegan":
-        meal_plan = """
-        **Breakfast**: Smoothie bowl with almond milk, bananas, and chia seeds.
-        **Lunch**: Lentil curry with basmati rice and steamed broccoli.
-        **Dinner**: Vegan Buddha bowl with quinoa, roasted veggies, and tahini dressing.
-        **Snacks**: Apple slices with peanut butter and a handful of walnuts.
-        """
-    elif dietary_preferences == "Meat Free":
-        meal_plan = """
-        **Breakfast**: Scrambled eggs with spinach and whole-grain toast.
-        **Lunch**: Caprese salad with mozzarella, tomatoes, and basil.
-        **Dinner**: Eggplant parmesan with a side of garlic bread.
-        **Snacks**: Cottage cheese with pineapple and a handful of cashews.
-        """
-    else:
-        meal_plan = """
-        **Breakfast**: Scrambled eggs with spinach and avocado.
-        **Lunch**: Grilled chicken salad with quinoa and olive oil dressing.
-        **Dinner**: Baked salmon with steamed broccoli and sweet potatoes.
-        **Snacks**: Greek yogurt with berries and a handful of almonds.
-        """
-
-    # Basic fitness routine
-    fitness_routine = """
-    **Warm-up**: 10 minutes of dynamic stretching.
-    **Workout**:
-    - Squats: 3 sets of 12 reps.
-    - Push-ups: 3 sets of 15 reps.
-    - Plank: 3 sets of 1 minute.
-    **Cool-down**: 5 minutes of static stretching.
-    """
-
-    # Hydration and fasting tips
-    hydration_tips = """
-    - Drink at least 2-3 liters of water daily.
-    - Start your day with a glass of water.
-    - Avoid sugary drinks.
-    """
-    fasting_tips = """
-    - Consider intermittent fasting (e.g., 16:8 method).
-    - Avoid eating late at night.
-    """
-
-    return {
-        "why_this_plan_works": f"Tailored for a {age}-year-old {sex} weighing {weight}kg and {height}cm tall.",
-        "meal_plan": meal_plan,
-        "fitness_routine": fitness_routine,
-        "hydration_tips": hydration_tips,
-        "fasting_tips": fasting_tips,
-        "important_considerations": """
-        - Hydration: Drink plenty of water throughout the day.
-        - Electrolytes: Monitor sodium, potassium, and magnesium levels.
-        - Fiber: Ensure adequate intake through vegetables and fruits.
-        - Listen to your body: Adjust portion sizes as needed.
-        """
-    }
-
-# Function to validate API key (placeholder)
-def validate_api_key(api_key, api_provider):
-    return True  # Placeholder
-
-# Function to call the AI API (replace with actual API endpoint and parameters)
-def call_ai_api(api_provider, api_key, question):
-    try:
-        if api_provider == "Gemini":
-            url = "https://api.gemini.com/v1/ask"  # Replace with actual endpoint
-            headers = {"Authorization": f"Bearer {api_key}"}
-            payload = {"question": question}
-            response = requests.post(url, headers=headers, json=payload)
-            response.raise_for_status()  # Raise an error for bad status codes
-            return response.json().get("answer", "No answer found.")
-        elif api_provider == "DeepSeek":
-            url = "https://api.deepseek.com/v1/ask"  # Replace with actual endpoint
-            headers = {"Authorization": f"Bearer {api_key}"}
-            payload = {"question": question}
-            response = requests.post(url, headers=headers, json=payload)
-            response.raise_for_status()  # Raise an error for bad status codes
-            return response.json().get("answer", "No answer found.")
-        else:
-            return "Unsupported API provider."
-    except requests.exceptions.RequestException as e:
-        return f"API Error: {e}"
-
-# Function to get age icon based on age
-def get_age_icon(age):
-    if age < 18:
-        return "👦"  # Child
-    elif 18 <= age < 40:
-        return "👨"  # Young adult
-    elif 40 <= age < 60:
-        return "🧔"  # Middle-aged adult
-    else:
-        return "👴"  # Elderly person
-
 # Function to calculate BMI
 def calculate_bmi(weight, height):
     return weight / ((height / 100) ** 2)
@@ -214,22 +27,6 @@ def calculate_ideal_weight(height, age):
         ideal_weight *= 0.95  # Slightly lower ideal weight for older adults
     return ideal_weight
 
-# Function to create a custom BMI meter
-def create_bmi_meter(bmi):
-    st.markdown("### 📊 BMI Meter")
-    if bmi < 18.5:
-        st.error(f"BMI: {bmi:.1f} (Underweight)")
-        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
-    elif 18.5 <= bmi < 25:
-        st.success(f"BMI: {bmi:.1f} (Healthy)")
-        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
-    elif 25 <= bmi < 30:
-        st.warning(f"BMI: {bmi:.1f} (Overweight)")
-        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
-    else:
-        st.error(f"BMI: {bmi:.1f} (Obese)")
-        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
-
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
     st.session_state.dietary_plan = {}
@@ -242,7 +39,7 @@ if 'qa_pairs' not in st.session_state:
 if 'plans_generated' not in st.session_state:
     st.session_state.plans_generated = False
 
-# Custom CSS for compact UI
+# Custom CSS for minimal UI
 st.markdown("""
     <style>
     .main {
@@ -268,33 +65,26 @@ st.markdown("""
         border-radius: 10px;
         padding: 10px;
     }
-    .success-box {
+    .info-box {
         padding: 1rem;
         border-radius: 0.5rem;
-        background-color: #f0fff4;
-        border: 1px solid #9ae6b4;
+        background-color: #f0f8ff;
+        border: 1px solid #87CEEB;
+        margin-bottom: 1rem;
     }
     .warning-box {
         padding: 1rem;
         border-radius: 0.5rem;
         background-color: #fffaf0;
         border: 1px solid #fbd38d;
+        margin-bottom: 1rem;
     }
-    .info-box {
+    .success-box {
         padding: 1rem;
         border-radius: 0.5rem;
-        background-color: #f0f8ff;
-        border: 1px solid #87CEEB;
-    }
-    .icon {
-        font-size: 1.5rem;
-        margin-right: 0.5rem;
-    }
-    .age-icon {
-        font-size: 2rem;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        color: #2c3e50;
+        background-color: #f0fff4;
+        border: 1px solid #9ae6b4;
+        margin-bottom: 1rem;
     }
     .modern-container {
         background-color: #f9f9f9;
@@ -315,38 +105,6 @@ st.markdown("""
         color: #2c3e50;
         text-align: center;
         margin-bottom: 0.5rem;
-    }
-    .bmi-box {
-        background-color: #00008B;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        color: white;
-        margin-bottom: 1rem;
-    }
-    .tooltip {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
-    }
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: black;
-        color: #fff;
-        text-align: center;
-        border-radius: 5px;
-        padding: 5px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -60px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-        opacity: 1;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -373,10 +131,7 @@ with st.sidebar:
             else:
                 st.markdown("[Get your DeepSeek API key here](https://platform.deepseek.com)")
         else:
-            if validate_api_key(api_key, api_provider):
-                st.success("API Key accepted!")
-            else:
-                st.error("Invalid API key. Please check and try again.")
+            st.success("API Key accepted!")
 
     st.title("📊 Progress Tracker")
     weight_today = st.number_input("Today's Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=90.0)
@@ -397,9 +152,8 @@ with st.sidebar:
 # Main App
 st.title("🏋️‍♂️ AI Health & Fitness Planner")
 st.markdown("""
-    <div style='background-color: #00008B; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem;'>
+    <div style='background-color: #00008B; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem; color: white;'>
     Get personalized dietary and fitness plans tailored to your goals and preferences.
-    Our AI-powered system considers your unique profile to create the perfect plan for you.
     </div>
 """, unsafe_allow_html=True)
 
@@ -412,9 +166,7 @@ with col1:
     st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
     st.markdown("<div class='modern-header'>🎂 Age</div>", unsafe_allow_html=True)
     age = st.slider("", min_value=10, max_value=100, value=45, step=1, help="Adjust your age using the slider.")
-    age_icon = get_age_icon(age)
     st.markdown(f"<div class='large-number'>{age} years</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='age-icon'>{age_icon}</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
@@ -432,14 +184,15 @@ with col3:
     st.markdown(f"<div class='large-number'>{height_cm:.1f} cm ({feet}'{inches}\")</div>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+# Calculate BMI and Health Metrics
+bmi = calculate_bmi(weight, height_cm)
+healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
+ideal_weight = calculate_ideal_weight(height_cm, age)
+overweight_status = weight - ideal_weight
+
 # Health Metrics Section
 st.markdown("---")
 st.markdown("### 📊 Health Metrics")
-
-# Calculate ideal weight range and overweight status
-ideal_weight = calculate_ideal_weight(height_cm, age)
-healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
-overweight_status = weight - ideal_weight
 
 # Display Ideal Weight Range
 st.markdown(f"""
@@ -468,7 +221,7 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-# Display BMI Status with Emojis
+# Display BMI Status
 st.markdown("### 📈 BMI Status")
 if bmi < 18.5:
     st.markdown(f"""
@@ -552,11 +305,17 @@ if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
     if use_ai and api_key:
         with st.spinner("Creating your perfect health and fitness routine using AI..."):
             try:
-                dietary_expert = DietaryExpert()
-                fitness_expert = FitnessExpert()
-
-                st.session_state.dietary_plan = dietary_expert.generate_plan(user_profile)
-                st.session_state.fitness_plan = fitness_expert.generate_plan(user_profile)
+                # Mock AI-generated plans (replace with actual API calls)
+                st.session_state.dietary_plan = {
+                    "why_this_plan_works": f"Tailored for a {age}-year-old {sex} weighing {weight}kg and {height_cm}cm tall.",
+                    "meal_plan": "Sample meal plan based on your preferences.",
+                    "important_considerations": "Stay hydrated and listen to your body."
+                }
+                st.session_state.fitness_plan = {
+                    "goals": "Achieve your fitness goals with this plan.",
+                    "routine": "Sample workout routine based on your goals.",
+                    "tips": "Stay consistent and track your progress."
+                }
                 st.session_state.plans_generated = True
 
                 st.success("AI-generated plans created successfully!")
@@ -565,16 +324,16 @@ if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
     else:
         with st.spinner("Creating your basic health and fitness routine..."):
             try:
-                basic_plan = generate_basic_plan(user_profile)
+                # Basic plans
                 st.session_state.dietary_plan = {
-                    "why_this_plan_works": basic_plan["why_this_plan_works"],
-                    "meal_plan": basic_plan["meal_plan"],
-                    "important_considerations": basic_plan["important_considerations"]
+                    "why_this_plan_works": f"Tailored for a {age}-year-old {sex} weighing {weight}kg and {height_cm}cm tall.",
+                    "meal_plan": "Basic meal plan based on your preferences.",
+                    "important_considerations": "Stay hydrated and listen to your body."
                 }
                 st.session_state.fitness_plan = {
-                    "goals": "Achieve your fitness goals with this basic plan.",
-                    "routine": basic_plan["fitness_routine"],
-                    "tips": basic_plan["hydration_tips"] + "\n" + basic_plan["fasting_tips"]
+                    "goals": "Achieve your fitness goals with this plan.",
+                    "routine": "Basic workout routine based on your goals.",
+                    "tips": "Stay consistent and track your progress."
                 }
                 st.session_state.plans_generated = True
 
@@ -591,9 +350,7 @@ if st.session_state.plans_generated:
         st.markdown("### 🍽️ Meal Plan")
         st.write(st.session_state.dietary_plan["meal_plan"])
         st.markdown("### ⚠️ Important Considerations")
-        for consideration in st.session_state.dietary_plan["important_considerations"].split('\n'):
-            if consideration.strip():
-                st.warning(consideration)
+        st.write(st.session_state.dietary_plan["important_considerations"])
 
     with st.expander("💪 Fitness Plan", expanded=True):
         st.markdown("### 🎯 Goals")
@@ -601,9 +358,7 @@ if st.session_state.plans_generated:
         st.markdown("### 🏋️‍♂️ Exercise Routine")
         st.write(st.session_state.fitness_plan["routine"])
         st.markdown("### 💡 Pro Tips")
-        for tip in st.session_state.fitness_plan["tips"].split('\n'):
-            if tip.strip():
-                st.info(tip)
+        st.write(st.session_state.fitness_plan["tips"])
 
 # Q&A Section (Limited to Fitness Plan)
 if st.session_state.plans_generated:
@@ -619,8 +374,8 @@ if st.session_state.plans_generated:
                 if question_input:
                     with st.spinner("Finding the best answer for you..."):
                         try:
-                            # Call the AI API
-                            answer = call_ai_api(api_provider, api_key, question_input)
+                            # Mock AI response (replace with actual API call)
+                            answer = "Sample answer based on your question."
                             st.session_state.qa_pairs.append((question_input, answer))
                             st.success("Answer generated!")
                         except Exception as e:
