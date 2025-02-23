@@ -2,6 +2,13 @@ import streamlit as st
 from datetime import datetime
 import pandas as pd
 
+# Function to convert height from cm to feet and inches
+def cm_to_feet_inches(height_cm):
+    inches = height_cm / 2.54
+    feet = int(inches // 12)
+    inches = int(inches % 12)
+    return feet, inches
+
 # Mock AI Agents (replace with actual API integration)
 class DietaryExpert:
     def generate_plan(self, profile):
