@@ -52,6 +52,59 @@ class FitnessExpert:
             """
         }
 
+# Function to generate a basic plan without AI
+def generate_basic_plan(profile):
+    age = profile.get("age", 45)
+    weight = profile.get("weight", 90)
+    height = profile.get("height", 167.64)
+    sex = profile.get("sex", "Male")
+    activity_level = profile.get("activity_level", "Moderately Active")
+    dietary_preferences = profile.get("dietary_preferences", "Keto")
+    fitness_goals = profile.get("fitness_goals", "Gain Muscle")
+
+    # Basic meal plan
+    meal_plan = """
+    **Breakfast**: Scrambled eggs with spinach and avocado.
+    **Lunch**: Grilled chicken salad with quinoa and olive oil dressing.
+    **Dinner**: Baked salmon with steamed broccoli and sweet potatoes.
+    **Snacks**: Greek yogurt with berries and a handful of almonds.
+    """
+
+    # Basic fitness routine
+    fitness_routine = """
+    **Warm-up**: 10 minutes of dynamic stretching.
+    **Workout**:
+    - Squats: 3 sets of 12 reps.
+    - Push-ups: 3 sets of 15 reps.
+    - Plank: 3 sets of 1 minute.
+    **Cool-down**: 5 minutes of static stretching.
+    """
+
+    # Hydration and fasting tips
+    hydration_tips = """
+    - Drink at least 2-3 liters of water daily.
+    - Start your day with a glass of water.
+    - Avoid sugary drinks.
+    """
+    fasting_tips = """
+    - Consider intermittent fasting (e.g., 16:8 method).
+    - Avoid eating late at night.
+    """
+
+    return {
+        "why_this_plan_works": f"Tailored for a {age}-year-old {sex} weighing {weight}kg and {height}cm tall.",
+        "meal_plan": meal_plan,
+        "fitness_routine": fitness_routine,
+        "hydration_tips": hydration_tips,
+        "fasting_tips": fasting_tips,
+        "important_considerations": """
+        - Hydration: Drink plenty of water throughout the day.
+        - Electrolytes: Monitor sodium, potassium, and magnesium levels.
+        - Fiber: Ensure adequate intake through vegetables and fruits.
+        - Listen to your body: Adjust portion sizes as needed.
+        """
+    }
+
 # Function to validate API key (placeholder)
 def validate_api_key(api_key, api_provider):
     # Replace with actual API validation logic
@@ -196,27 +249,29 @@ st.markdown("""
 # Sidebar for API Key and Navigation
 with st.sidebar:
     st.title("⚙️ Settings")
-    api_provider = st.selectbox(
-        "Choose API Provider",
-        options=["Gemini", "DeepSeek"],
-        help="Select the AI API provider for generating plans."
-    )
-    api_key = st.text_input(
-        f"Enter {api_provider} API Key",
-        type="password",
-        help=f"Required for {api_provider} functionality."
-    )
-    if not api_key:
-        st.warning(f"Please enter your {api_provider} API key to proceed.")
-        if api_provider == "Gemini":
-            st.markdown("[Get your Gemini API key here](https://aistudio.google.com/apikey)")
+    use_ai = st.checkbox("Enable AI Features (Requires API Key)", value=False)
+    if use_ai:
+        api_provider = st.selectbox(
+            "Choose API Provider",
+            options=["Gemini", "DeepSeek"],
+            help="Select the AI API provider for generating plans."
+        )
+        api_key = st.text_input(
+            f"Enter {api_provider} API Key",
+            type="password",
+            help=f"Required for {api_provider} functionality."
+        )
+        if not api_key:
+            st.warning(f"Please enter your {api_provider} API key to use AI features.")
+            if api_provider == "Gemini":
+                st.markdown("[Get your Gemini API key here](https://aistudio.google.com/apikey)")
+            else:
+                st.markdown("[Get your DeepSeek API key here](https://platform.deepseek.com)")
         else:
-            st.markdown("[Get your DeepSeek API key here](https://platform.deepseek.com)")
-    else:
-        if validate_api_key(api_key, api_provider):
-            st.success("API Key accepted!")
-        else:
-            st.error("Invalid API key. Please check and try again.")
+            if validate_api_key(api_key, api_provider):
+                st.success("API Key accepted!")
+            else:
+                st.error("Invalid API key. Please check and try again.")
 
     st.title("📊 Progress Tracker")
     weight_today = st.number_input("Today's Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=90.0)
@@ -334,29 +389,46 @@ with col1:
 
 # Generate Plans
 if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
-    if not api_key:
-        st.error(f"Please enter your {api_provider} API key in the sidebar.")
-    else:
-        with st.spinner("Creating your perfect health and fitness routine..."):
+    user_profile = {
+        "age": age,
+        "weight": weight,
+        "height": height_cm,
+        "sex": sex,
+        "activity_level": activity_level,
+        "dietary_preferences": dietary_preferences,
+        "fitness_goals": fitness_goals
+    }
+
+    if use_ai and api_key:
+        with st.spinner("Creating your perfect health and fitness routine using AI..."):
             try:
                 dietary_expert = DietaryExpert()
                 fitness_expert = FitnessExpert()
-
-                user_profile = {
-                    "age": age,
-                    "weight": weight,
-                    "height": height_cm,
-                    "sex": sex,
-                    "activity_level": activity_level,
-                    "dietary_preferences": dietary_preferences,
-                    "fitness_goals": fitness_goals
-                }
 
                 st.session_state.dietary_plan = dietary_expert.generate_plan(user_profile)
                 st.session_state.fitness_plan = fitness_expert.generate_plan(user_profile)
                 st.session_state.plans_generated = True
 
-                st.success("Plans generated successfully!")
+                st.success("AI-generated plans created successfully!")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+    else:
+        with st.spinner("Creating your basic health and fitness routine..."):
+            try:
+                basic_plan = generate_basic_plan(user_profile)
+                st.session_state.dietary_plan = {
+                    "why_this_plan_works": basic_plan["why_this_plan_works"],
+                    "meal_plan": basic_plan["meal_plan"],
+                    "important_considerations": basic_plan["important_considerations"]
+                }
+                st.session_state.fitness_plan = {
+                    "goals": "Achieve your fitness goals with this basic plan.",
+                    "routine": basic_plan["fitness_routine"],
+                    "tips": basic_plan["hydration_tips"] + "\n" + basic_plan["fasting_tips"]
+                }
+                st.session_state.plans_generated = True
+
+                st.success("Basic plans created successfully!")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
 
