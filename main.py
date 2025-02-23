@@ -39,11 +39,13 @@ if 'qa_pairs' not in st.session_state:
 if 'plans_generated' not in st.session_state:
     st.session_state.plans_generated = False
 
-# Custom CSS for minimal UI
+# Custom CSS for dark theme and compact layout
 st.markdown("""
     <style>
     .main {
-        padding: 1rem;
+        padding: 0.5rem;
+        background-color: #1e1e1e;
+        color: #ffffff;
     }
     .stButton>button {
         width: 100%;
@@ -56,55 +58,71 @@ st.markdown("""
     .stTextInput>div>div>input {
         border-radius: 10px;
         padding: 10px;
+        background-color: #2d2d2d;
+        color: #ffffff;
     }
     .stNumberInput>div>div>input {
         border-radius: 10px;
         padding: 10px;
+        background-color: #2d2d2d;
+        color: #ffffff;
     }
     .stSelectbox>div>div>div {
         border-radius: 10px;
         padding: 10px;
+        background-color: #2d2d2d;
+        color: #ffffff;
     }
     .info-box {
-        padding: 1rem;
+        padding: 0.5rem;
         border-radius: 0.5rem;
-        background-color: #f0f8ff;
+        background-color: #2d2d2d;
         border: 1px solid #87CEEB;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
     }
     .warning-box {
-        padding: 1rem;
+        padding: 0.5rem;
         border-radius: 0.5rem;
-        background-color: #fffaf0;
+        background-color: #4d2d2d;
         border: 1px solid #fbd38d;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
     }
     .success-box {
-        padding: 1rem;
+        padding: 0.5rem;
         border-radius: 0.5rem;
-        background-color: #f0fff4;
+        background-color: #2d4d2d;
         border: 1px solid #9ae6b4;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
     }
     .modern-container {
-        background-color: #f9f9f9;
-        padding: 1rem;
+        background-color: #2d2d2d;
+        padding: 0.5rem;
         border-radius: 0.5rem;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
     }
     .modern-header {
         font-size: 1.2rem;
         font-weight: bold;
-        color: #2c3e50;
+        color: #87CEEB;
         margin-bottom: 0.5rem;
     }
     .large-number {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #2c3e50;
+        color: #87CEEB;
         text-align: center;
         margin-bottom: 0.5rem;
+    }
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+        color: #87CEEB;
+    }
+    .stMarkdown p {
+        color: #ffffff;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -152,7 +170,7 @@ with st.sidebar:
 # Main App
 st.title("🏋️‍♂️ AI Health & Fitness Planner")
 st.markdown("""
-    <div style='background-color: #00008B; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem; color: white;'>
+    <div style='background-color: #2d2d2d; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem; color: #ffffff;'>
     Get personalized dietary and fitness plans tailored to your goals and preferences.
     </div>
 """, unsafe_allow_html=True)
