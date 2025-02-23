@@ -555,30 +555,33 @@ if st.session_state.plans_generated:
 if st.session_state.plans_generated:
     st.header("❓ Questions about your Fitness Plan?")
     
-    # Check if API key is provided
-    if not api_key:
-        st.warning("Please enter your API key in the sidebar to ask questions.")
+    # Check if AI features are enabled and API key is provided
+    if use_ai:
+        if not api_key:
+            st.warning("Please enter your API key in the sidebar to ask questions.")
+        else:
+            question_input = st.text_input("Ask a question about your fitness plan")
+            if st.button("Get Answer"):
+                if question_input:
+                    with st.spinner("Finding the best answer for you..."):
+                        try:
+                            # Call the AI API
+                            answer = call_ai_api(api_provider, api_key, question_input)
+                            st.session_state.qa_pairs.append((question_input, answer))
+                            st.success("Answer generated!")
+                        except Exception as e:
+                            st.error(f"An error occurred: {e}")
+                else:
+                    st.warning("Please enter a question.")
+            
+            # Add a note about the API key
+            st.markdown("""
+                <div class='info-box'>
+                    <strong>Note:</strong> To ask questions, ensure you have entered a valid API key in the sidebar.
+                </div>
+            """, unsafe_allow_html=True)
     else:
-        question_input = st.text_input("Ask a question about your fitness plan")
-        if st.button("Get Answer"):
-            if question_input:
-                with st.spinner("Finding the best answer for you..."):
-                    try:
-                        # Call the AI API
-                        answer = call_ai_api(api_provider, api_key, question_input)
-                        st.session_state.qa_pairs.append((question_input, answer))
-                        st.success("Answer generated!")
-                    except Exception as e:
-                        st.error(f"An error occurred: {e}")
-            else:
-                st.warning("Please enter a question.")
-        
-        # Add a note about the API key
-        st.markdown("""
-            <div class='info-box'>
-                <strong>Note:</strong> To ask questions, ensure you have entered a valid API key in the sidebar.
-            </div>
-        """, unsafe_allow_html=True)
+        st.warning("AI features are disabled. Enable AI features in the sidebar to ask questions.")
 
     if st.session_state.qa_pairs:
         st.header("💬 Q&A History")
