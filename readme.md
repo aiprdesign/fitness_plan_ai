@@ -33,13 +33,7 @@ The **AI Health & Fitness Planner** is a **fully automated and personalized tool
 ```bash
 git clone https://github.com/yourusername/AI-Health-Fitness-Planner.git
 cd AI-Health-Fitness-Planner
-2️⃣ Install Dependencies
-bash
-Copy
-Edit
+
 pip install streamlit pandas datetime
-3️⃣ Run the Application
-bash
-Copy
-Edit
+
 streamlit run app.py
