@@ -90,6 +90,29 @@ elif 25 <= bmi < 30:
 else:
     st.error("**Obesity Risks:** High risk of heart disease, stroke, type 2 diabetes, sleep apnea, and joint problems.")
 
+# --- Personalized Diet Plan ---
+st.header("🍽️ Your Personalized Diet Plan")
+diet_choices = ["Vegetarian", "Vegan", "Keto", "Low Carb", "Gluten Free", "Dairy Free"]
+dietary_preferences = st.selectbox("Select Your Diet Preference", diet_choices)
+
+# --- Workout Plan ---
+st.header("💪 Workout Plan")
+workout_plan = {
+    "Lose Weight": ["30 min jogging", "Full-body strength exercises", "Evening Yoga"],
+    "Gain Muscle": ["Weightlifting (4 sets of 8 reps)", "High protein intake", "Stretching & recovery"],
+    "Maintain Weight": ["45 min brisk walk", "Bodyweight exercises", "Relaxation & deep breathing"]
+}
+
+st.write(f"**Morning:** {workout_plan['Lose Weight'][0]}")
+st.write(f"**Afternoon:** {workout_plan['Lose Weight'][1]}")
+st.write(f"**Evening:** {workout_plan['Lose Weight'][2]}")
+
+# --- Yoga & Pranayama Plan ---
+st.header("🧘 Yoga & Pranayama Plan")
+st.write("**Morning:** 5 min deep breathing + 5 min Alternate Nostril Breathing")
+st.write("**Afternoon:** 5 min mindful meditation")
+st.write("**Evening:** 10 min guided relaxation")
+
 # --- Footer Disclaimer ---
 st.markdown("""
     <div class="footer">
@@ -97,24 +120,5 @@ st.markdown("""
         Always consult a healthcare provider before making major health decisions.
     </div>
 """, unsafe_allow_html=True)
-
-# --- Activity Level & Fitness Goals ---
-st.header("🏃 Lifestyle & Goals")
-activity_level = st.selectbox("Activity Level", ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"])
-fitness_goal = st.selectbox("Fitness Goal", ["Lose Weight", "Maintain Weight", "Gain Muscle"])
-daily_calories = calculate_caloric_needs(age, weight, height_cm, activity_level, fitness_goal)
-st.markdown(f"**Estimated Daily Calories:** {daily_calories} kcal")
-
-# --- Weight Progress Tracking ---
-st.header("📊 Weight Tracking")
-weight_today = st.number_input("Log Today's Weight (kg)", min_value=30.0, max_value=200.0, step=0.1)
-
-if st.button("Log Weight"):
-    st.session_state.progress_data.append({"date": datetime.today().strftime('%Y-%m-%d'), "weight": weight_today})
-    st.success("Weight logged successfully!")
-
-if st.session_state.progress_data:
-    df = pd.DataFrame(st.session_state.progress_data)
-    st.line_chart(df.set_index("date"))
 
 st.success("Your health plan is ready! 🎯")
