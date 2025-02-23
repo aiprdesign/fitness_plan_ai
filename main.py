@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import pandas as pd
-import plotly.graph_objects as go
+import plotly.graph_objects as go  # Make sure to install plotly: pip install plotly
 
 # Mock AI Agents (replace with actual API integration)
 class DietaryExpert:
