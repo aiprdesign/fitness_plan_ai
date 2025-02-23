@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import datetime, timedelta
+from datetime import datetime
 import pandas as pd
 
 # --- Initialize session state ---
@@ -19,9 +19,9 @@ def calculate_bmi(weight, height):
 def calculate_healthy_weight(height):
     return round(18.5 * ((height / 100) ** 2), 1), round(24.9 * ((height / 100) ** 2), 1)
 
-def calculate_caloric_needs(age, weight, height, sex, activity_level, goal):
+def calculate_caloric_needs(age, weight, height, activity_level, goal):
     """Calculates daily calorie needs based on activity level and fitness goal"""
-    bmr = (10 * weight) + (6.25 * height) - (5 * age) + (5 if sex == "Male" else -161)
+    bmr = (10 * weight) + (6.25 * height) - (5 * age)  
     activity_multipliers = {
         "Sedentary": 1.2, "Lightly Active": 1.375, "Moderately Active": 1.55,
         "Very Active": 1.725, "Extremely Active": 1.9
@@ -37,10 +37,10 @@ def calculate_caloric_needs(age, weight, height, sex, activity_level, goal):
 st.markdown("""
     <style>
     .bmi-gauge { text-align: center; font-size: 22px; font-weight: bold; padding: 10px; color: white; border-radius: 10px; }
-    .bmi-good { background-color: #4CAF50; }  /* Green - Healthy */
-    .bmi-warning { background-color: #FFA500; }  /* Orange - Overweight */
-    .bmi-danger { background-color: #FF5733; }  /* Red - Obese */
-    .bmi-low { background-color: #1E90FF; }  /* Blue - Underweight */
+    .bmi-good { background-color: #4CAF50; }  
+    .bmi-warning { background-color: #FFA500; }  
+    .bmi-danger { background-color: #FF5733; }  
+    .bmi-low { background-color: #1E90FF; }  
     .meter { width: 100%; height: 25px; border-radius: 8px; }
     </style>
 """, unsafe_allow_html=True)
@@ -53,7 +53,6 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     age = st.slider("🎂 Age", 10, 100, 30, 1)
-    sex = st.radio("⚥ Gender", ["Male", "Female"])
     
 with col2:
     weight = st.slider("⚖️ Weight (kg)", 30.0, 200.0, 70.0, 0.1)
@@ -68,7 +67,7 @@ st.markdown(f"**📏 Height:** {height_cm} cm  /  {feet}'{inches}\"")
 st.subheader("🏃 Lifestyle & Goals")
 activity_level = st.selectbox("🏋️ Activity Level", ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"])
 fitness_goal = st.selectbox("🎯 Fitness Goal", ["Lose Weight", "Maintain Weight", "Gain Muscle"])
-daily_calories = calculate_caloric_needs(age, weight, height_cm, sex, activity_level, fitness_goal)
+daily_calories = calculate_caloric_needs(age, weight, height_cm, activity_level, fitness_goal)
 st.markdown(f"**🔥 Daily Caloric Needs:** {daily_calories} kcal")
 
 # --- BMI & Weight Analysis ---
@@ -104,16 +103,25 @@ if st.session_state.progress_data:
     df = pd.DataFrame(st.session_state.progress_data)
     st.line_chart(df.set_index("date"))
 
-# --- AI-Powered Health Recommendations ---
-st.subheader("💡 Personalized Tips")
-if fitness_goal == "Lose Weight":
-    st.info("✅ Focus on a **caloric deficit** and increase daily movement. Try strength training + cardio for best results!")
-elif fitness_goal == "Gain Muscle":
-    st.info("✅ Increase **protein intake** and focus on **progressive overload** in strength training.")
-else:
-    st.info("✅ Maintain a **balanced diet** and stick to a sustainable fitness routine!")
+# --- Personalized Diet Plan ---
+st.subheader("🍽️ Personalized Diet Plan")
+diet_choices = ["Vegetarian", "Vegan", "Keto", "Low Carb", "Gluten Free", "Dairy Free"]
+dietary_preferences = st.selectbox("🥗 Choose your dietary preference:", diet_choices)
 
-# --- Meditation Plan ---
+diet_plan = {
+    "Vegetarian": ["Oatmeal with nuts 🥣", "Lentil soup with salad 🥗", "Paneer curry with rice 🍛"],
+    "Vegan": ["Smoothie bowl 🍓", "Quinoa salad 🥙", "Tofu stir-fry 🍜"],
+    "Keto": ["Eggs & avocado 🍳", "Grilled chicken with greens 🥩", "Salmon with butter sauce 🐟"],
+    "Low Carb": ["Greek yogurt 🍦", "Chicken and veggies 🥩", "Steak with broccoli 🥦"],
+    "Gluten Free": ["Fruit salad 🍉", "Rice bowl with fish 🍣", "Grilled meat & veggies 🍗"],
+    "Dairy Free": ["Almond milk smoothie 🥤", "Quinoa with tofu 🍲", "Grilled chicken with sweet potatoes 🍠"]
+}
+
+st.markdown(f"**🍽️ Breakfast:** {diet_plan[dietary_preferences][0]}")
+st.markdown(f"**🥗 Lunch:** {diet_plan[dietary_preferences][1]}")
+st.markdown(f"**🍛 Dinner:** {diet_plan[dietary_preferences][2]}")
+
+# --- Meditation & Pranayama ---
 st.subheader("🧘 Meditation & Pranayama Plan")
 st.markdown("**🌅 Morning:** 5 min deep breathing + 5 min Alternate Nostril Breathing")
 st.markdown("**☀️ Afternoon:** 5 min mindful meditation")
