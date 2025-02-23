@@ -44,7 +44,7 @@ st.markdown("""
     .bmi-danger { background-color: #FF5733; }  
     .bmi-low { background-color: #1E90FF; }  
     .meter { width: 100%; height: 25px; border-radius: 8px; }
-    .container { background: #f5f5f5; padding: 20px; border-radius: 10px; }
+    .footer { text-align: center; font-size: 14px; margin-top: 30px; color: gray; }
     .stSlider > div[data-baseweb="slider"] > div { height: 6px !important; } /* Makes slider thicker */
     </style>
 """, unsafe_allow_html=True)
@@ -79,6 +79,25 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
+# --- Disease Risk Based on BMI ---
+st.header("⚠️ Health Risks Based on BMI")
+if bmi < 18.5:
+    st.warning("**Underweight Risks:** Malnutrition, osteoporosis, weakened immune system.")
+elif 18.5 <= bmi < 25:
+    st.success("**Healthy Weight:** Low risk of chronic diseases. Maintain a balanced diet & active lifestyle!")
+elif 25 <= bmi < 30:
+    st.warning("**Overweight Risks:** Increased risk of heart disease, high blood pressure, and type 2 diabetes.")
+else:
+    st.error("**Obesity Risks:** High risk of heart disease, stroke, type 2 diabetes, sleep apnea, and joint problems.")
+
+# --- Footer Disclaimer ---
+st.markdown("""
+    <div class="footer">
+        ⚠️ This tool provides general health insights but **is not a substitute for professional medical advice**. 
+        Always consult a healthcare provider before making major health decisions.
+    </div>
+""", unsafe_allow_html=True)
+
 # --- Activity Level & Fitness Goals ---
 st.header("🏃 Lifestyle & Goals")
 activity_level = st.selectbox("Activity Level", ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"])
@@ -97,35 +116,5 @@ if st.button("Log Weight"):
 if st.session_state.progress_data:
     df = pd.DataFrame(st.session_state.progress_data)
     st.line_chart(df.set_index("date"))
-
-# --- Personalized Diet Plan ---
-st.header("🍽️ Your Personalized Diet Plan")
-diet_choices = ["Vegetarian", "Vegan", "Keto", "Low Carb", "Gluten Free", "Dairy Free"]
-dietary_preferences = st.selectbox("Select Your Diet Preference", diet_choices)
-
-diet_plan = {
-    "Vegetarian": ["Oatmeal with nuts", "Chickpea salad", "Lentil soup & rice"],
-    "Vegan": ["Smoothie bowl", "Quinoa & spinach salad", "Tofu stir-fry"],
-    "Keto": ["Scrambled eggs & avocado", "Grilled chicken & greens", "Salmon with butter sauce"],
-    "Low Carb": ["Greek yogurt & almonds", "Chicken & steamed broccoli", "Steak with spinach"],
-    "Gluten Free": ["Fruit & nuts", "Grilled fish & rice", "Chicken & roasted vegetables"],
-    "Dairy Free": ["Almond milk smoothie", "Quinoa & tofu bowl", "Sweet potatoes & grilled chicken"]
-}
-
-st.write(f"**Breakfast:** {diet_plan[dietary_preferences][0]}")
-st.write(f"**Lunch:** {diet_plan[dietary_preferences][1]}")
-st.write(f"**Dinner:** {diet_plan[dietary_preferences][2]}")
-
-# --- Workout Plan ---
-st.header("💪 Workout Plan")
-workout_plan = {
-    "Lose Weight": ["30 min jogging", "Full-body strength exercises", "Evening Yoga"],
-    "Gain Muscle": ["Weightlifting (4 sets of 8 reps)", "High protein intake", "Stretching & recovery"],
-    "Maintain Weight": ["45 min brisk walk", "Bodyweight exercises", "Relaxation & deep breathing"]
-}
-
-st.write(f"**Morning:** {workout_plan[fitness_goal][0]}")
-st.write(f"**Afternoon:** {workout_plan[fitness_goal][1]}")
-st.write(f"**Evening:** {workout_plan[fitness_goal][2]}")
 
 st.success("Your health plan is ready! 🎯")
