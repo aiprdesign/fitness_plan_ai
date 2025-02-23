@@ -506,20 +506,27 @@ if st.session_state.plans_generated:
 # Q&A Section (Limited to Fitness Plan)
 if st.session_state.plans_generated:
     st.header("❓ Questions about your Fitness Plan?")
-    question_input = st.text_input("Ask a question about your fitness plan")
-    if st.button("Get Answer"):
-        if question_input:
-            with st.spinner("Finding the best answer for you..."):
-                try:
-                    # Mock AI response (replace with API call)
-                    if "fitness" in question_input.lower() or "exercise" in question_input.lower():
-                        answer = "Focus on proper form and consistency. Rest adequately between workouts."
-                    else:
-                        answer = "I can only answer questions related to your fitness plan."
-                    st.session_state.qa_pairs.append((question_input, answer))
-                    st.success("Answer generated!")
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
+    
+    # Check if API key is provided
+    if not api_key:
+        st.warning("Please enter your API key in the sidebar to ask questions.")
+    else:
+        question_input = st.text_input("Ask a question about your fitness plan")
+        if st.button("Get Answer"):
+            if question_input:
+                with st.spinner("Finding the best answer for you..."):
+                    try:
+                        # Mock AI response (replace with API call)
+                        if "fitness" in question_input.lower() or "exercise" in question_input.lower():
+                            answer = "Focus on proper form and consistency. Rest adequately between workouts."
+                        else:
+                            answer = "I can only answer questions related to your fitness plan."
+                        st.session_state.qa_pairs.append((question_input, answer))
+                        st.success("Answer generated!")
+                    except Exception as e:
+                        st.error(f"An error occurred: {e}")
+            else:
+                st.warning("Please enter a question.")
 
     if st.session_state.qa_pairs:
         st.header("💬 Q&A History")
