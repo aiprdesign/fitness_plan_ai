@@ -45,6 +45,7 @@ st.markdown("""
     .bmi-low { background-color: #1E90FF; }  
     .meter { width: 100%; height: 25px; border-radius: 8px; }
     .container { background: #f5f5f5; padding: 20px; border-radius: 10px; }
+    .stSlider > div[data-baseweb="slider"] > div { height: 6px !important; } /* Makes slider thicker */
     </style>
 """, unsafe_allow_html=True)
 
@@ -54,15 +55,29 @@ st.title("🏋️ AI Health & Fitness Planner")
 st.header("👤 Your Profile")
 st.markdown("Enter your details to get a **personalized health plan**")
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 with col1:
     age = st.slider("Age", 10, 100, 30, 1)
-    weight = st.slider("Weight (kg)", 30.0, 200.0, 70.0, 0.1)
     
 with col2:
-    height_cm = st.slider("Height (cm)", 100.0, 250.0, 170.0, 0.1)
+    weight = st.slider("Weight (kg)", 30.0, 200.0, 70.0, 0.1)
+    
+with col3:
+    height_cm = st.slider("Height (cm / ft)", 100.0, 250.0, 170.0, 0.1)
     feet, inches = cm_to_feet_inches(height_cm)
-    st.markdown(f"**Converted Height:** {feet} ft {inches} in")
+    st.markdown(f"**{height_cm} cm / {feet}'{inches}\"**")
+
+# --- BMI Gauge (Now under Sliders) ---
+bmi = calculate_bmi(weight, height_cm)
+bmi_category = "🔵 Underweight" if bmi < 18.5 else "🟢 Healthy" if bmi < 25 else "🟠 Overweight" if bmi < 30 else "🔴 Obese"
+bmi_class = "bmi-low" if bmi < 18.5 else "bmi-good" if bmi < 25 else "bmi-warning" if bmi < 30 else "bmi-danger"
+
+st.markdown(f"""
+    <div class="bmi-gauge {bmi_class}">
+        <meter min="10" max="40" value="{bmi}" class="meter"></meter><br>
+        <span>Your BMI: {bmi} ({bmi_category})</span>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- Activity Level & Fitness Goals ---
 st.header("🏃 Lifestyle & Goals")
@@ -70,27 +85,6 @@ activity_level = st.selectbox("Activity Level", ["Sedentary", "Lightly Active", 
 fitness_goal = st.selectbox("Fitness Goal", ["Lose Weight", "Maintain Weight", "Gain Muscle"])
 daily_calories = calculate_caloric_needs(age, weight, height_cm, activity_level, fitness_goal)
 st.markdown(f"**Estimated Daily Calories:** {daily_calories} kcal")
-
-# --- BMI & Weight Analysis ---
-st.header("📈 Health Insights")
-bmi = calculate_bmi(weight, height_cm)
-healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
-
-st.markdown(f"**Your BMI:** {bmi}")
-st.markdown(f"**Healthy Weight Range:** {healthy_weight_lower} kg - {healthy_weight_upper} kg")
-
-# --- BMI Gauge (Dynamic Color) ---
-st.header("📊 BMI Gauge")
-
-bmi_category = "🔵 Underweight" if bmi < 18.5 else "🟢 Healthy" if bmi < 25 else "🟠 Overweight" if bmi < 30 else "🔴 Obese"
-bmi_class = "bmi-low" if bmi < 18.5 else "bmi-good" if bmi < 25 else "bmi-warning" if bmi < 30 else "bmi-danger"
-
-st.markdown(f"""
-    <div class="bmi-gauge {bmi_class}">
-        <meter min="10" max="40" value="{bmi}" class="meter"></meter><br>
-        <span>{bmi_category}</span>
-    </div>
-""", unsafe_allow_html=True)
 
 # --- Weight Progress Tracking ---
 st.header("📊 Weight Tracking")
