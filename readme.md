@@ -1,43 +1,35 @@
-markdown
-Copy
-# 🏋️‍♂️ AI Health & Fitness Planner
+# 🏋️ AI Health & Fitness Planner
 
-Welcome to the **AI Health & Fitness Planner**! This app provides personalized dietary and fitness plans tailored to your goals and preferences. Powered by AI (Gemini API), it helps you achieve your health and fitness objectives with ease.
+### **📌 Personalized Diet, Workout, and Wellness Plans Using AI & Data Analysis**
 
----
+The **AI Health & Fitness Planner** is a **fully automated and personalized tool** that helps users create customized **diet plans, workout schedules, BMI tracking, and meditation routines** based on their age, weight, height, activity level, and goals. 
 
-## 🚀 Features
-
-- **Personalized Plans**:
-  - Generate dietary and fitness plans based on your profile (age, weight, height, activity level, etc.).
-  - Includes meal plans, exercise routines, and expert tips.
-
-- **Progress Tracking**:
-  - Log your weight and visualize progress over time with interactive charts.
-
-- **Interactive Q&A**:
-  - Ask questions about your plans and get AI-powered answers.
-
-- **User-Friendly Interface**:
-  - Clean, modern design with expandable sections and intuitive navigation.
+> **⚠️ Disclaimer:** This tool provides general health insights but **is not a substitute for professional medical advice**. Always consult a healthcare provider before making major health decisions.
 
 ---
 
-## 🛠️ Setup Instructions
+## 🚀 **Features**
+### ✅ **Comprehensive Health Analysis**
+- 📏 **Height in both cm & ft/inches**
+- ⚖️ **BMI Calculation with Color-Coded Gauge**
+- 🏥 **Risk Assessment for Underweight, Overweight & Obesity**
+- 💡 **Personalized Advice to Improve Health**
 
-### Prerequisites
-- Python 3.8 or higher
-- Streamlit (`pip install streamlit`)
-- Gemini API key (get it from [Google AI Studio](https://aistudio.google.com/apikey))
+### ✅ **Personalized Plans**
+- 🍽️ **Custom Meal Plans** (Vegetarian, Vegan, Keto, Gluten-Free, etc.)
+- 💪 **Goal-Specific Workout Plans** (Weight Loss, Muscle Gain, Maintenance)
+- 🧘 **Yoga & Pranayama Guide** for Relaxation & Stress Reduction
+- 🔥 **Daily Caloric Needs Calculation**
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/ai-health-fitness-planner.git
-   cd ai-health-fitness-planner
-Install dependencies:
-pip install -r requirements.txt
+### ✅ **Live Tracking & Reports**
+- 📊 **Weight Progress Tracking**
+- 🏃 **Daily Activity Log**
+- 📅 **Workout & Diet Reminders (Future Feature)**
 
-Run the app: 
-streamlit run app.py
-Open your browser and navigate to http://localhost:8501.
+---
+
+## 🖥️ **Installation & Setup**
+### 1️⃣ **Clone the Repository**
+```bash
+git clone https://github.com/yourusername/AI-Health-Fitness-Planner.git
+cd AI-Health-Fitness-Planner
