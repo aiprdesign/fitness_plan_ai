@@ -108,7 +108,6 @@ def generate_basic_plan(profile):
 
 # Function to validate API key (placeholder)
 def validate_api_key(api_key, api_provider):
-    # Replace with actual API validation logic
     return True  # Placeholder
 
 # Function to get age icon based on age
@@ -134,22 +133,10 @@ def calculate_healthy_weight(height):
 
 # Function to calculate ideal weight based on height and age
 def calculate_ideal_weight(height, age):
-    # Simple formula for ideal weight (can be adjusted)
     ideal_weight = 50 + 0.9 * (height - 152)  # Adjusted for age
     if age > 40:
         ideal_weight *= 0.95  # Slightly lower ideal weight for older adults
     return ideal_weight
-
-# Function to convert height from cm to feet and inches
-def cm_to_feet_inches(height_cm):
-    inches = height_cm / 2.54
-    feet = int(inches // 12)
-    inches = int(inches % 12)
-    return feet, inches
-
-# Function to convert height from feet and inches to cm
-def feet_inches_to_cm(feet, inches):
-    return (feet * 12 + inches) * 2.54
 
 # Function to create a BMI gauge
 def create_bmi_gauge(bmi):
@@ -223,7 +210,195 @@ st.markdown("""
     .warning-box {
         padding: 1rem;
         border-radius: 0.5rem;
-        background-color: #fffaf        "age": age,
+        background-color: #fffaf0;
+        border: 1px solid #fbd38d;
+    }
+    .info-box {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #f0f8ff;
+        border: 1px solid #87CEEB;
+    }
+    .icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+    }
+    .age-icon {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+    }
+    .modern-container {
+        background-color: #f9f9f9;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+    }
+    .modern-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    .large-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .bmi-box {
+        background-color: #00008B;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Sidebar for API Key and Navigation
+with st.sidebar:
+    st.title("⚙️ Settings")
+    use_ai = st.checkbox("Enable AI Features (Requires API Key)", value=False)
+    if use_ai:
+        api_provider = st.selectbox(
+            "Choose API Provider",
+            options=["Gemini", "DeepSeek"],
+            help="Select the AI API provider for generating plans."
+        )
+        api_key = st.text_input(
+            f"Enter {api_provider} API Key",
+            type="password",
+            help=f"Required for {api_provider} functionality."
+        )
+        if not api_key:
+            st.warning(f"Please enter your {api_provider} API key to use AI features.")
+            if api_provider == "Gemini":
+                st.markdown("[Get your Gemini API key here](https://aistudio.google.com/apikey)")
+            else:
+                st.markdown("[Get your DeepSeek API key here](https://platform.deepseek.com)")
+        else:
+            if validate_api_key(api_key, api_provider):
+                st.success("API Key accepted!")
+            else:
+                st.error("Invalid API key. Please check and try again.")
+
+    st.title("📊 Progress Tracker")
+    weight_today = st.number_input("Today's Weight (kg)", min_value=20.0, max_value=300.0, step=0.1, value=90.0)
+    if st.button("Log Weight"):
+        if weight_today <= 0:
+            st.error("Weight must be a positive number.")
+        else:
+            st.session_state.progress_data.append({
+                "date": datetime.today().strftime('%Y-%m-%d'),
+                "weight": weight_today
+            })
+            st.success("Weight logged successfully!")
+
+    if st.session_state.progress_data:
+        progress_df = pd.DataFrame(st.session_state.progress_data)
+        st.line_chart(progress_df.set_index("date"))
+
+# Main App
+st.title("🏋️‍♂️ AI Health & Fitness Planner")
+st.markdown("""
+    <div style='background-color: #00008B; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem;'>
+    Get personalized dietary and fitness plans tailored to your goals and preferences.
+    Our AI-powered system considers your unique profile to create the perfect plan for you.
+    </div>
+""", unsafe_allow_html=True)
+
+# User Profile Input
+st.header("👤 Your Profile")
+
+# Age, Weight, and Height Sliders
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>🎂 Age</div>", unsafe_allow_html=True)
+    age = st.slider("", min_value=10, max_value=100, value=45, step=1, help="Adjust your age using the slider.")
+    age_icon = get_age_icon(age)
+    st.markdown(f"<div class='large-number'>{age} years</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='age-icon'>{age_icon}</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with col2:
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>⚖️ Weight (kg)</div>", unsafe_allow_html=True)
+    weight = st.slider("", min_value=20.0, max_value=300.0, value=90.0, step=0.1, help="Adjust your weight using the slider.")
+    st.markdown(f"<div class='large-number'>{weight} kg</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with col3:
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>📏 Height</div>", unsafe_allow_html=True)
+    height_cm = st.slider("", min_value=100.0, max_value=250.0, value=170.0, step=0.1, help="Adjust your height using the slider.")
+    feet, inches = cm_to_feet_inches(height_cm)
+    st.markdown(f"<div class='large-number'>{height_cm:.1f} cm ({feet}'{inches}\")</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# BMI and Healthy Weight at the Top
+bmi = calculate_bmi(weight, height_cm)
+healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
+ideal_weight = calculate_ideal_weight(height_cm, age)
+weight_difference = weight - ideal_weight
+
+# BMI Gauge
+st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+st.markdown("<div class='modern-header'>📊 BMI Gauge</div>", unsafe_allow_html=True)
+bmi_gauge = create_bmi_gauge(bmi)
+st.plotly_chart(bmi_gauge, use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
+
+# Gender Radio Button
+st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+st.markdown("<div class='modern-header'>👫 Gender</div>", unsafe_allow_html=True)
+sex = st.radio("", options=["Male", "Female", "Other"], index=0, help="Select your gender.")
+st.markdown("</div>", unsafe_allow_html=True)
+
+# Additional Inputs
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>🏃‍♂️ Activity Level</div>", unsafe_allow_html=True)
+    activity_level = st.selectbox(
+        "",
+        options=["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extremely Active"],
+        index=2,  # Default: Moderately Active
+        help="Select your typical activity level."
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with col2:
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>🥗 Dietary Preferences</div>", unsafe_allow_html=True)
+    dietary_preferences = st.selectbox(
+        "",
+        options=["Vegetarian", "Keto", "Gluten Free", "Low Carb", "Dairy Free"],
+        index=1,  # Default: Keto
+        help="Select your dietary preference."
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
+    st.markdown("<div class='modern-header'>🎯 Fitness Goals</div>", unsafe_allow_html=True)
+    fitness_goals = st.selectbox(
+        "",
+        options=["Lose Weight", "Gain Muscle", "Endurance", "Stay Fit", "Strength Training"],
+        index=1,  # Default: Gain Muscle
+        help="What do you want to achieve?"
+    )
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# Generate Plans
+if st.button("🎯 Generate My Personalized Plan", use_container_width=True):
+    user_profile = {
+        "age": age,
         "weight": weight,
         "height": height_cm,
         "sex": sex,
