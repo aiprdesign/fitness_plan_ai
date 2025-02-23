@@ -36,4 +36,5 @@ cd AI-Health-Fitness-Planner
 
 pip install streamlit pandas datetime
 
-streamlit run app.py
+streamlit run fitness_plan_ai.py
+
