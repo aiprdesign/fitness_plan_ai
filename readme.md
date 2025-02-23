@@ -1,3 +1,7 @@
+![image](https://github.com/user-attachments/assets/2f410bfb-78ba-4361-ae97-94e614df42b1)
+
+
+
 # 🏋️ AI Health & Fitness Planner
 
 ### **📌 Personalized Diet, Workout, and Wellness Plans Using AI & Data Analysis**
