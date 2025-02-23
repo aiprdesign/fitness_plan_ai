@@ -135,16 +135,6 @@ st.markdown("""
         border-radius: 10px;
         padding: 10px;
     }
-    .stSlider>div>div>div>div {
-        height: 30px;
-    }
-    .stSlider>div>div>div>div>div {
-        height: 30px;
-    }
-    .stSlider label {
-        font-size: 1.2rem !important;
-        font-weight: bold !important;
-    }
     .success-box {
         padding: 1rem;
         border-radius: 0.5rem;
