@@ -25,14 +25,15 @@ def calculate_ideal_weight(height, age):
 st.markdown("""
     <style>
     .main { padding: 1rem; background-color: #121212; color: white; font-family: 'Arial', sans-serif; }
-    .stButton>button { width: 100%; border-radius: 10px; height: 3em; background: linear-gradient(45deg, #ff416c, #ff4b2b); color: white; font-weight: bold; border: none; }
-    .stTextInput>div>div>input, .stNumberInput>div>div>input, .stSelectbox>div>div>div {
-        border-radius: 10px; padding: 10px; background-color: #1e1e1e; color: white; border: 1px solid #ff416c;
+    .info-box, .warning-box, .success-box {
+        padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 10px; text-align: center;
     }
-    .info-box { padding: 10px; border-radius: 10px; background-color: #2d2d2d; border: 1px solid #87CEEB; margin-bottom: 10px; color: white; }
-    .warning-box { padding: 10px; border-radius: 10px; background-color: #4d2d2d; border: 1px solid #fbd38d; margin-bottom: 10px; color: white; }
-    .success-box { padding: 10px; border-radius: 10px; background-color: #2d4d2d; border: 1px solid #9ae6b4; margin-bottom: 10px; color: white; }
-    .stExpander { border-radius: 10px; background: linear-gradient(45deg, #1e1e1e, #333); color: white; }
+    .info-box { background: linear-gradient(45deg, #1e1e1e, #444); border: 1px solid #87CEEB; color: white; }
+    .warning-box { background: linear-gradient(45deg, #4d2d2d, #800000); border: 1px solid #fbd38d; color: white; }
+    .success-box { background: linear-gradient(45deg, #2d4d2d, #0d6f0d); border: 1px solid #9ae6b4; color: white; }
+    .stExpander { border-radius: 8px; background: linear-gradient(45deg, #1e1e1e, #333); color: white; }
+    .bmi-gauge { text-align: center; font-size: 20px; font-weight: bold; color: white; }
+    .meter { width: 100%; height: 25px; border-radius: 8px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -40,9 +41,17 @@ st.title("🏋️‍♂️ AI Health & Fitness Planner")
 
 # --- User Profile Inputs ---
 st.header("👤 Your Profile")
-age = st.slider("🎂 Age", 10, 100, 30, 1)
-weight = st.slider("⚖️ Weight (kg)", 30.0, 200.0, 70.0, 0.1)
-height_cm = st.slider("📏 Height (cm)", 100.0, 250.0, 170.0, 0.1)
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    age = st.slider("🎂 Age", 10, 100, 30, 1)
+with col2:
+    weight = st.slider("⚖️ Weight (kg)", 30.0, 200.0, 70.0, 0.1)
+with col3:
+    height_cm = st.slider("📏 Height (cm)", 100.0, 250.0, 170.0, 0.1)
+    feet, inches = cm_to_feet_inches(height_cm)
+
+st.markdown(f"**📏 Height:** {height_cm} cm  /  {feet}'{inches}\"")
 
 # --- BMI & Weight Analysis ---
 bmi = calculate_bmi(weight, height_cm)
@@ -51,16 +60,20 @@ ideal_weight = calculate_ideal_weight(height_cm, age)
 weight_difference = round(weight - ideal_weight, 1)
 
 st.subheader("📈 Health Insights")
-st.write(f"**Your BMI:** {bmi}  🏥")
-st.write(f"**Ideal Weight Range:** {healthy_weight_lower} kg - {healthy_weight_upper} kg  🎯")
-st.write(f"**Your Ideal Weight:** {ideal_weight} kg  ✅")
+st.write(f"**Your BMI:** {bmi} 🏥")
+st.write(f"**Ideal Weight Range:** {healthy_weight_lower} kg - {healthy_weight_upper} kg 🎯")
+st.write(f"**Your Ideal Weight:** {ideal_weight} kg ✅")
 
-if weight_difference > 0:
-    st.markdown(f"<div class='warning-box'>⚠️ You are {weight_difference} kg over your ideal weight.</div>", unsafe_allow_html=True)
-elif weight_difference < 0:
-    st.markdown(f"<div class='success-box'>✅ You are {abs(weight_difference)} kg under your ideal weight.</div>", unsafe_allow_html=True)
-else:
-    st.markdown(f"<div class='success-box'>🎉 You are at your ideal weight!</div>", unsafe_allow_html=True)
+# --- BMI Gauge ---
+st.subheader("📊 BMI Gauge Meter")
+bmi_category = "🔵 Underweight" if bmi < 18.5 else "🟢 Normal" if bmi < 25 else "🟠 Overweight" if bmi < 30 else "🔴 Obese"
+
+st.markdown(f"""
+    <div class="bmi-gauge">
+        <meter min="10" max="40" value="{bmi}" class="meter"></meter><br>
+        <span>{bmi_category}</span>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- Diet Plan ---
 st.subheader("🍽️ Personalized Diet Plan")
