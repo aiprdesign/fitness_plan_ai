@@ -196,16 +196,16 @@ def create_bmi_meter(bmi):
     st.markdown("### 📊 BMI Meter")
     if bmi < 18.5:
         st.error(f"BMI: {bmi:.1f} (Underweight)")
-        st.progress(bmi / 40)
+        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
     elif 18.5 <= bmi < 25:
         st.success(f"BMI: {bmi:.1f} (Healthy)")
-        st.progress(bmi / 40)
+        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
     elif 25 <= bmi < 30:
         st.warning(f"BMI: {bmi:.1f} (Overweight)")
-        st.progress(bmi / 40)
+        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
     else:
         st.error(f"BMI: {bmi:.1f} (Obese)")
-        st.progress(bmi / 40)
+        st.progress(min(bmi / 40, 1.0))  # Ensure value is <= 1
 
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
