@@ -70,26 +70,41 @@ fitness_goal = st.selectbox("🎯 Fitness Goal", ["Lose Weight", "Maintain Weigh
 daily_calories = calculate_caloric_needs(age, weight, height_cm, activity_level, fitness_goal)
 st.markdown(f"**🔥 Daily Caloric Needs:** {daily_calories} kcal")
 
-# --- BMI & Weight Analysis ---
-bmi = calculate_bmi(weight, height_cm)
-healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
+# --- Detailed Diet Plan ---
+st.subheader("🍽️ Personalized Diet Plan")
+diet_choices = ["Vegetarian", "Vegan", "Keto", "Low Carb", "Gluten Free", "Dairy Free"]
+dietary_preferences = st.selectbox("🥗 Choose your dietary preference:", diet_choices)
 
-st.subheader("📈 Health Insights")
-st.write(f"**Your BMI:** {bmi} 🏥")
-st.write(f"**Healthy Weight Range:** {healthy_weight_lower} kg - {healthy_weight_upper} kg 🎯")
+diet_plan = {
+    "Vegetarian": ["🥣 Oatmeal with nuts & berries", "🥗 Chickpea salad with avocado", "🍛 Lentil soup & brown rice"],
+    "Vegan": ["🍓 Smoothie bowl with chia seeds", "🥙 Quinoa & spinach salad", "🍜 Tofu stir-fry with vegetables"],
+    "Keto": ["🍳 Scrambled eggs & avocado", "🥩 Grilled chicken with greens", "🐟 Salmon with butter sauce"],
+    "Low Carb": ["🍦 Greek yogurt with almonds", "🥩 Chicken with steamed broccoli", "🥦 Steak with spinach"],
+    "Gluten Free": ["🍉 Fresh fruit & nuts", "🍣 Grilled fish with rice", "🍗 Chicken & roasted vegetables"],
+    "Dairy Free": ["🥤 Almond milk smoothie", "🍲 Quinoa & tofu bowl", "🍠 Sweet potatoes & grilled chicken"]
+}
 
-# --- BMI Gauge (Dynamic Color) ---
-st.subheader("📊 BMI Gauge Meter")
+st.markdown(f"**🍽️ Breakfast:** {diet_plan[dietary_preferences][0]}")
+st.markdown(f"**🥗 Lunch:** {diet_plan[dietary_preferences][1]}")
+st.markdown(f"**🍛 Dinner:** {diet_plan[dietary_preferences][2]}")
 
-bmi_category = "🔵 Underweight" if bmi < 18.5 else "🟢 Healthy" if bmi < 25 else "🟠 Overweight" if bmi < 30 else "🔴 Obese"
-bmi_class = "bmi-low" if bmi < 18.5 else "bmi-good" if bmi < 25 else "bmi-warning" if bmi < 30 else "bmi-danger"
+# --- Detailed Workout Plan ---
+st.subheader("💪 Workout Plan")
+workout_plan = {
+    "Lose Weight": ["🏃 30 min jogging", "💪 3 sets of full-body strength exercises", "🧘 Evening Yoga (15 min)"],
+    "Gain Muscle": ["🏋️ Heavy weightlifting (4 sets of 8 reps)", "🥩 Protein intake post-workout", "🛌 Recovery & stretching"],
+    "Maintain Weight": ["🚶 45 min brisk walking", "🧘 Light bodyweight exercises", "🛀 Relaxation & deep breathing"]
+}
 
-st.markdown(f"""
-    <div class="bmi-gauge {bmi_class}">
-        <meter min="10" max="40" value="{bmi}" class="meter"></meter><br>
-        <span>{bmi_category}</span>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown(f"**🌅 Morning:** {workout_plan[fitness_goal][0]}")
+st.markdown(f"**☀️ Afternoon:** {workout_plan[fitness_goal][1]}")
+st.markdown(f"**🌙 Evening:** {workout_plan[fitness_goal][2]}")
+
+# --- Meditation & Pranayama ---
+st.subheader("🧘 Meditation & Pranayama Plan")
+st.markdown("**🌅 Morning:** 5 min deep breathing + 5 min Alternate Nostril Breathing")
+st.markdown("**☀️ Afternoon:** 5 min mindful meditation")
+st.markdown("**🌙 Evening:** 10 min guided relaxation")
 
 # --- Weight Progress Tracking ---
 st.subheader("📊 Track Your Progress")
@@ -102,29 +117,5 @@ if st.button("📌 Log Weight"):
 if st.session_state.progress_data:
     df = pd.DataFrame(st.session_state.progress_data)
     st.line_chart(df.set_index("date"))
-
-# --- Personalized Diet Plan ---
-st.subheader("🍽️ Personalized Diet Plan")
-diet_choices = ["Vegetarian", "Vegan", "Keto", "Low Carb", "Gluten Free", "Dairy Free"]
-dietary_preferences = st.selectbox("🥗 Choose your dietary preference:", diet_choices)
-
-diet_plan = {
-    "Vegetarian": ["Oatmeal with nuts 🥣", "Lentil soup with salad 🥗", "Paneer curry with rice 🍛"],
-    "Vegan": ["Smoothie bowl 🍓", "Quinoa salad 🥙", "Tofu stir-fry 🍜"],
-    "Keto": ["Eggs & avocado 🍳", "Grilled chicken with greens 🥩", "Salmon with butter sauce 🐟"],
-    "Low Carb": ["Greek yogurt 🍦", "Chicken and veggies 🥩", "Steak with broccoli 🥦"],
-    "Gluten Free": ["Fruit salad 🍉", "Rice bowl with fish 🍣", "Grilled meat & veggies 🍗"],
-    "Dairy Free": ["Almond milk smoothie 🥤", "Quinoa with tofu 🍲", "Grilled chicken with sweet potatoes 🍠"]
-}
-
-st.markdown(f"**🍽️ Breakfast:** {diet_plan[dietary_preferences][0]}")
-st.markdown(f"**🥗 Lunch:** {diet_plan[dietary_preferences][1]}")
-st.markdown(f"**🍛 Dinner:** {diet_plan[dietary_preferences][2]}")
-
-# --- Meditation & Pranayama ---
-st.subheader("🧘 Meditation & Pranayama Plan")
-st.markdown("**🌅 Morning:** 5 min deep breathing + 5 min Alternate Nostril Breathing")
-st.markdown("**☀️ Afternoon:** 5 min mindful meditation")
-st.markdown("**🌙 Evening:** 10 min guided relaxation")
 
 st.success("🎯 Your personalized health plan is ready! 🚀")
