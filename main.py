@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import pandas as pd
+import requests  # For API calls
 
 # Function to convert height from cm to feet and inches
 def cm_to_feet_inches(height_cm):
@@ -163,6 +164,28 @@ def generate_basic_plan(profile):
 def validate_api_key(api_key, api_provider):
     return True  # Placeholder
 
+# Function to call the AI API (replace with actual API endpoint and parameters)
+def call_ai_api(api_provider, api_key, question):
+    try:
+        if api_provider == "Gemini":
+            url = "https://api.gemini.com/v1/ask"  # Replace with actual endpoint
+            headers = {"Authorization": f"Bearer {api_key}"}
+            payload = {"question": question}
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()  # Raise an error for bad status codes
+            return response.json().get("answer", "No answer found.")
+        elif api_provider == "DeepSeek":
+            url = "https://api.deepseek.com/v1/ask"  # Replace with actual endpoint
+            headers = {"Authorization": f"Bearer {api_key}"}
+            payload = {"question": question}
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()  # Raise an error for bad status codes
+            return response.json().get("answer", "No answer found.")
+        else:
+            return "Unsupported API provider."
+    except requests.exceptions.RequestException as e:
+        return f"API Error: {e}"
+
 # Function to get age icon based on age
 def get_age_icon(age):
     if age < 18:
@@ -299,6 +322,31 @@ st.markdown("""
         border-radius: 0.5rem;
         color: white;
         margin-bottom: 1rem;
+    }
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -516,20 +564,28 @@ if st.session_state.plans_generated:
             if question_input:
                 with st.spinner("Finding the best answer for you..."):
                     try:
-                        # Mock AI response (replace with API call)
-                        if "fitness" in question_input.lower() or "exercise" in question_input.lower():
-                            answer = "Focus on proper form and consistency. Rest adequately between workouts."
-                        else:
-                            answer = "I can only answer questions related to your fitness plan."
+                        # Call the AI API
+                        answer = call_ai_api(api_provider, api_key, question_input)
                         st.session_state.qa_pairs.append((question_input, answer))
                         st.success("Answer generated!")
                     except Exception as e:
                         st.error(f"An error occurred: {e}")
             else:
                 st.warning("Please enter a question.")
+        
+        # Add a note about the API key
+        st.markdown("""
+            <div class='info-box'>
+                <strong>Note:</strong> To ask questions, ensure you have entered a valid API key in the sidebar.
+            </div>
+        """, unsafe_allow_html=True)
 
     if st.session_state.qa_pairs:
         st.header("💬 Q&A History")
         for q, a in st.session_state.qa_pairs:
             st.markdown(f"**Q:** {q}")
             st.markdown(f"**A:** {a}")
+        
+        if st.button("Clear Q&A History"):
+            st.session_state.qa_pairs = []
+            st.success("Q&A history cleared!")
