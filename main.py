@@ -1,7 +1,6 @@
 import streamlit as st
 from datetime import datetime
 import pandas as pd
-import plotly.graph_objects as go  # Make sure to install plotly: pip install plotly
 
 # Mock AI Agents (replace with actual API integration)
 class DietaryExpert:
@@ -9,17 +8,42 @@ class DietaryExpert:
         age = profile.get("age", 45)
         weight = profile.get("weight", 90)
         height = profile.get("height", 167.64)
-        dietary_preferences = profile.get("dietary_preferences", "Keto")
+        dietary_preferences = profile.get("dietary_preferences", "Vegetarian")
         fitness_goals = profile.get("fitness_goals", "Gain Muscle")
 
-        return {
-            "why_this_plan_works": f"Tailored for a {age}-year-old {profile.get('sex', 'Male')} weighing {weight}kg and {height}cm tall.",
-            "meal_plan": f"""
+        # Dietary plans based on preferences
+        if dietary_preferences == "Vegetarian":
+            meal_plan = """
+            **Breakfast**: Greek yogurt with honey, nuts, and fresh berries.
+            **Lunch**: Quinoa salad with chickpeas, avocado, and feta cheese.
+            **Dinner**: Vegetable stir-fry with tofu and brown rice.
+            **Snacks**: Hummus with carrot sticks and a handful of almonds.
+            """
+        elif dietary_preferences == "Vegan":
+            meal_plan = """
+            **Breakfast**: Smoothie bowl with almond milk, bananas, and chia seeds.
+            **Lunch**: Lentil curry with basmati rice and steamed broccoli.
+            **Dinner**: Vegan Buddha bowl with quinoa, roasted veggies, and tahini dressing.
+            **Snacks**: Apple slices with peanut butter and a handful of walnuts.
+            """
+        elif dietary_preferences == "Meat Free":
+            meal_plan = """
+            **Breakfast**: Scrambled eggs with spinach and whole-grain toast.
+            **Lunch**: Caprese salad with mozzarella, tomatoes, and basil.
+            **Dinner**: Eggplant parmesan with a side of garlic bread.
+            **Snacks**: Cottage cheese with pineapple and a handful of cashews.
+            """
+        else:
+            meal_plan = """
             **Breakfast**: Scrambled eggs with spinach and avocado.
             **Lunch**: Grilled chicken salad with quinoa and olive oil dressing.
             **Dinner**: Baked salmon with steamed broccoli and sweet potatoes.
             **Snacks**: Greek yogurt with berries and a handful of almonds.
-            """,
+            """
+
+        return {
+            "why_this_plan_works": f"Tailored for a {age}-year-old {profile.get('sex', 'Male')} weighing {weight}kg and {height}cm tall.",
+            "meal_plan": meal_plan,
             "important_considerations": """
             - Hydration: Drink plenty of water throughout the day.
             - Electrolytes: Monitor sodium, potassium, and magnesium levels.
@@ -60,16 +84,38 @@ def generate_basic_plan(profile):
     height = profile.get("height", 167.64)
     sex = profile.get("sex", "Male")
     activity_level = profile.get("activity_level", "Moderately Active")
-    dietary_preferences = profile.get("dietary_preferences", "Keto")
+    dietary_preferences = profile.get("dietary_preferences", "Vegetarian")
     fitness_goals = profile.get("fitness_goals", "Gain Muscle")
 
-    # Basic meal plan
-    meal_plan = """
-    **Breakfast**: Scrambled eggs with spinach and avocado.
-    **Lunch**: Grilled chicken salad with quinoa and olive oil dressing.
-    **Dinner**: Baked salmon with steamed broccoli and sweet potatoes.
-    **Snacks**: Greek yogurt with berries and a handful of almonds.
-    """
+    # Basic meal plan based on dietary preferences
+    if dietary_preferences == "Vegetarian":
+        meal_plan = """
+        **Breakfast**: Greek yogurt with honey, nuts, and fresh berries.
+        **Lunch**: Quinoa salad with chickpeas, avocado, and feta cheese.
+        **Dinner**: Vegetable stir-fry with tofu and brown rice.
+        **Snacks**: Hummus with carrot sticks and a handful of almonds.
+        """
+    elif dietary_preferences == "Vegan":
+        meal_plan = """
+        **Breakfast**: Smoothie bowl with almond milk, bananas, and chia seeds.
+        **Lunch**: Lentil curry with basmati rice and steamed broccoli.
+        **Dinner**: Vegan Buddha bowl with quinoa, roasted veggies, and tahini dressing.
+        **Snacks**: Apple slices with peanut butter and a handful of walnuts.
+        """
+    elif dietary_preferences == "Meat Free":
+        meal_plan = """
+        **Breakfast**: Scrambled eggs with spinach and whole-grain toast.
+        **Lunch**: Caprese salad with mozzarella, tomatoes, and basil.
+        **Dinner**: Eggplant parmesan with a side of garlic bread.
+        **Snacks**: Cottage cheese with pineapple and a handful of cashews.
+        """
+    else:
+        meal_plan = """
+        **Breakfast**: Scrambled eggs with spinach and avocado.
+        **Lunch**: Grilled chicken salad with quinoa and olive oil dressing.
+        **Dinner**: Baked salmon with steamed broccoli and sweet potatoes.
+        **Snacks**: Greek yogurt with berries and a handful of almonds.
+        """
 
     # Basic fitness routine
     fitness_routine = """
@@ -138,30 +184,21 @@ def calculate_ideal_weight(height, age):
         ideal_weight *= 0.95  # Slightly lower ideal weight for older adults
     return ideal_weight
 
-# Function to create a BMI gauge
-def create_bmi_gauge(bmi):
-    fig = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=bmi,
-        domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "BMI"},
-        gauge={
-            'axis': {'range': [10, 40]},
-            'bar': {'color': "darkblue"},
-            'steps': [
-                {'range': [10, 18.5], 'color': "red"},
-                {'range': [18.5, 25], 'color': "green"},
-                {'range': [25, 30], 'color': "yellow"},
-                {'range': [30, 40], 'color': "red"}
-            ],
-            'threshold': {
-                'line': {'color': "black", 'width': 4},
-                'thickness': 0.75,
-                'value': bmi
-            }
-        }
-    ))
-    return fig
+# Function to create a custom BMI meter
+def create_bmi_meter(bmi):
+    st.markdown("### 📊 BMI Meter")
+    if bmi < 18.5:
+        st.error(f"BMI: {bmi:.1f} (Underweight)")
+        st.progress(bmi / 40)
+    elif 18.5 <= bmi < 25:
+        st.success(f"BMI: {bmi:.1f} (Healthy)")
+        st.progress(bmi / 40)
+    elif 25 <= bmi < 30:
+        st.warning(f"BMI: {bmi:.1f} (Overweight)")
+        st.progress(bmi / 40)
+    else:
+        st.error(f"BMI: {bmi:.1f} (Obese)")
+        st.progress(bmi / 40)
 
 # Initialize session state
 if 'dietary_plan' not in st.session_state:
@@ -346,12 +383,8 @@ healthy_weight_lower, healthy_weight_upper = calculate_healthy_weight(height_cm)
 ideal_weight = calculate_ideal_weight(height_cm, age)
 weight_difference = weight - ideal_weight
 
-# BMI Gauge
-st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
-st.markdown("<div class='modern-header'>📊 BMI Gauge</div>", unsafe_allow_html=True)
-bmi_gauge = create_bmi_gauge(bmi)
-st.plotly_chart(bmi_gauge, use_container_width=True)
-st.markdown("</div>", unsafe_allow_html=True)
+# Custom BMI Meter
+create_bmi_meter(bmi)
 
 # Gender Radio Button
 st.markdown("<div class='modern-container'>", unsafe_allow_html=True)
@@ -377,8 +410,8 @@ with col2:
     st.markdown("<div class='modern-header'>🥗 Dietary Preferences</div>", unsafe_allow_html=True)
     dietary_preferences = st.selectbox(
         "",
-        options=["Vegetarian", "Keto", "Gluten Free", "Low Carb", "Dairy Free"],
-        index=1,  # Default: Keto
+        options=["Vegetarian", "Vegan", "Meat Free", "Keto", "Gluten Free", "Low Carb", "Dairy Free"],
+        index=0,  # Default: Vegetarian
         help="Select your dietary preference."
     )
     st.markdown("</div>", unsafe_allow_html=True)
